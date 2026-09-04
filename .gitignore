@@ -25,7 +25,10 @@ yarn-error.log*
 
 # Local installation duplicates (skills/ is the source of truth)
 .cursor/
-.agents/
+.agents/*
+!.agents/plugins/
+.agents/plugins/*
+!.agents/plugins/marketplace.json
 
 # Environment files & secrets
 .env

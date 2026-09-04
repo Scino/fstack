@@ -1,0 +1,20 @@
+{
+  "name": "fstack",
+  "interface": {
+    "displayName": "fstack"
+  },
+  "plugins": [
+    {
+      "name": "fstack",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

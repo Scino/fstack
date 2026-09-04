@@ -216,7 +216,7 @@ Small tools that do not belong in either engine's headline, and still earn their
 | **Cursor** | Plugin at `~/.cursor/plugins/local/fstack` |
 | **Claude Code** | `~/.claude/skills` |
 | **Antigravity** | `~/.gemini/antigravity/skills` |
-| **OpenAI Codex** | `~/.codex/skills`, plus `.codex-plugin/plugin.json` in this repo |
+| **OpenAI Codex** | `~/.codex/skills` via CLI, or `codex plugin marketplace add Scino/fstack` for the full plugin |
 | **OpenCode** | `~/.config/opencode/skills` |
 | **Hermes / OpenClaw** | `.agents/skills` via `fstack init` in the target project |
 

@@ -23,7 +23,8 @@
     "LICENSE",
     ".cursor-plugin",
     ".codex-plugin",
-    ".claude-plugin"
+    ".claude-plugin",
+    ".agents/plugins/marketplace.json"
   ],
   "type": "module",
   "engines": {

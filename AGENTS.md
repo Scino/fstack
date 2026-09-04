@@ -17,6 +17,6 @@ npx @scino/fstack init
 npx @scino/fstack install --all
 ```
 
-`init` writes gitignored `.agents/skills` junctions. Do not commit `.agents/`.
+`init` writes gitignored `.agents/skills` junctions. Do not commit those. The only committed `.agents/` file is `.agents/plugins/marketplace.json` for Codex marketplace discovery.
 
 Use `/fstack` as the orchestrator. Engineering work goes through `/engineer-mode`. `/poteto-mode` is a compatibility alias. Configure models with `/setup-fstack`.

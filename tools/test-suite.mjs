@@ -116,6 +116,11 @@ try {
   assert(fs.existsSync(path.join(PACKAGE_ROOT, 'LICENSE')), 'root LICENSE exists');
   assert(fs.existsSync(path.join(PACKAGE_ROOT, '.cursor-plugin', 'plugin.json')), 'Cursor plugin manifest at repo root');
   assert(fs.existsSync(path.join(PACKAGE_ROOT, '.codex-plugin', 'plugin.json')), 'Codex plugin manifest at repo root');
+  const marketplacePath = path.join(PACKAGE_ROOT, '.agents', 'plugins', 'marketplace.json');
+  assert(fs.existsSync(marketplacePath), 'Codex marketplace catalog exists');
+  const marketplace = JSON.parse(fs.readFileSync(marketplacePath, 'utf8'));
+  assert(marketplace.plugins?.[0]?.name === 'fstack', 'Codex marketplace lists fstack');
+  assert(marketplace.plugins?.[0]?.source?.path === './', 'Codex marketplace points at repo root');
   assert(fs.existsSync(path.join(PACKAGE_ROOT, '.claude-plugin', 'plugin.json')), 'Claude plugin manifest at repo root');
   assert(pkg.repository.url.includes('github.com/Scino/fstack'), 'repository URL is Scino/fstack');
   const cursorPlugin = JSON.parse(fs.readFileSync(path.join(PACKAGE_ROOT, '.cursor-plugin', 'plugin.json'), 'utf8'));
