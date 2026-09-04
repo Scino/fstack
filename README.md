@@ -1,4 +1,4 @@
-# fstack, Fabio's Stack / Founder's Stack
+# fstack, Founder's Stack (and Fabio's Stack)
 
 **fstack** is an AI agent stack for founders who still write the product. It is built by [Fabio Parlascino](https://github.com/Scino). The F is both **Fabio** and **founder**. It is not tied to one editor or one lab. The same `/` skills run in Cursor, Claude Code, Google Antigravity, OpenAI Codex, OpenCode, Hermes, OpenClaw, and anything else that loads Agent Skills.
 
