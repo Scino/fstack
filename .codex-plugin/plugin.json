@@ -1,6 +1,6 @@
 {
   "name": "fstack",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Founder operations plus engineering rigor. Dual-engine agent stack. On Codex, tool names resolve via skills/engineer-mode/references/codex-tools.md.",
   "author": {
     "name": "Fabio Parlascino",
