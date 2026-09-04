@@ -62,6 +62,7 @@
     "url": "https://github.com/Scino/fstack/issues"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": false
   }
 }

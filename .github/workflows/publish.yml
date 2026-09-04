@@ -17,11 +17,11 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '24'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Use npm with trusted publishing support
-        run: npm install -g npm@latest
+        run: npm install -g npm@11.6.2
 
       - name: Verify tag matches package version
         if: github.event_name == 'release'
@@ -37,4 +37,6 @@ jobs:
       - run: node tools/validate-skills.mjs
 
       - name: Publish to npm (OIDC trusted publisher)
-        run: npm publish --provenance --access public
+        run: npm publish --access public
+        env:
+          NPM_CONFIG_PROVENANCE: 'false'
