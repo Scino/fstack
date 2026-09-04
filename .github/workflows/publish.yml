@@ -20,6 +20,9 @@ jobs:
           node-version: '22'
           registry-url: 'https://registry.npmjs.org'
 
+      - name: Use npm with trusted publishing support
+        run: npm install -g npm@latest
+
       - name: Verify tag matches package version
         if: github.event_name == 'release'
         run: |
@@ -33,7 +36,5 @@ jobs:
       - run: node tools/test-suite.mjs
       - run: node tools/validate-skills.mjs
 
-      - name: Publish to npm
+      - name: Publish to npm (OIDC trusted publisher)
         run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
