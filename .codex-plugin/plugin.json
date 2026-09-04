@@ -1,0 +1,35 @@
+{
+  "name": "fstack",
+  "version": "1.0.0",
+  "description": "Founder operations plus engineering rigor. Dual-engine agent stack. On Codex, tool names resolve via skills/engineer-mode/references/codex-tools.md.",
+  "author": {
+    "name": "Fabio Parlascino",
+    "url": "https://github.com/Scino"
+  },
+  "homepage": "https://github.com/Scino/fstack",
+  "repository": "https://github.com/Scino/fstack",
+  "license": "MIT",
+  "keywords": [
+    "fstack",
+    "founder",
+    "engineer-mode",
+    "skills",
+    "workflow"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "fstack",
+    "shortDescription": "Founder ops plus verified engineering. Talk to users, ship, don't ship slop.",
+    "longDescription": "fstack routes founder work (sales, support, social, strategy) and engineering work (engineer-mode playbooks and principles) through one skill tree. Skills are harness-agnostic. On Codex, Claude tool names resolve via the codex-tools mapping.",
+    "developerName": "Fabio Parlascino",
+    "category": "Developer Tools",
+    "capabilities": ["Interactive", "Read", "Write"],
+    "defaultPrompt": [
+      "Work on this in engineer-mode.",
+      "Run /support-loop on this customer complaint."
+    ],
+    "websiteURL": "https://github.com/Scino/fstack",
+    "logo": "./assets/logo.svg",
+    "brandColor": "#C4542A"
+  }
+}

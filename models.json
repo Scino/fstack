@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "fstack Model Configuration",
+  "description": "Symbolic model role mappings across AI agent harnesses. Skills refer to these roles, not vendor slugs. /setup-fstack writes a per-harness override sheet.",
+  "roles": {
+    "FastMechanical": {
+      "description": "Fast mechanical code edits, lint fixes, single-file refactoring, syntax cleanups",
+      "harnesses": {
+        "cursor": "composer-2.5-fast",
+        "claude": "claude-haiku-4-5",
+        "antigravity": "flash",
+        "codex": "gpt-5.4-mini",
+        "opencode": "inherit-parent",
+        "universal": "inherit-parent"
+      }
+    },
+    "DeepReasoning": {
+      "description": "Complex logic, difficult algorithmic debugging, architectural boundaries, test generation",
+      "harnesses": {
+        "cursor": "composer-2.5",
+        "claude": "claude-sonnet-4-6",
+        "antigravity": "pro",
+        "codex": "gpt-5.5",
+        "opencode": "inherit-parent",
+        "universal": "inherit-parent"
+      }
+    },
+    "StrongestJudgment": {
+      "description": "High-stakes trade-offs, root-cause forensics, final sign-offs, strategic reviews",
+      "harnesses": {
+        "cursor": "gpt-5.6-sol-high",
+        "claude": "claude-opus-5",
+        "antigravity": "inherit",
+        "codex": "gpt-5.6-sol",
+        "opencode": "inherit-parent",
+        "universal": "inherit-parent"
+      }
+    },
+    "ProseUnslop": {
+      "description": "De-slopping, email drafting, founder social posts, documentation, customer communications",
+      "harnesses": {
+        "cursor": "claude-opus-5-thinking-high",
+        "claude": "claude-opus-5",
+        "antigravity": "inherit",
+        "codex": "gpt-5.5",
+        "opencode": "inherit-parent",
+        "universal": "inherit-parent"
+      }
+    },
+    "DivergentPanel": {
+      "description": "Three distinct models for adversarial bake-offs (/arena, /interrogate, /architect)",
+      "harnesses": {
+        "cursor": ["composer-2.5", "gpt-5.6-sol-high", "cursor-grok-4.6-high"],
+        "claude": ["claude-opus-5", "claude-sonnet-4-6", "claude-haiku-4-5"],
+        "antigravity": ["pro", "flash", "inherit"],
+        "codex": ["gpt-5.6-sol", "gpt-5.5", "gpt-5.4"],
+        "opencode": ["inherit-parent", "inherit-parent", "inherit-parent"],
+        "universal": ["inherit-parent", "inherit-parent", "inherit-parent"]
+      }
+    }
+  }
+}

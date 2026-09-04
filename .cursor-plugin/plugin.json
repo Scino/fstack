@@ -1,0 +1,23 @@
+{
+  "name": "fstack",
+  "displayName": "fstack",
+  "version": "1.0.0",
+  "description": "Founder operations plus engineering rigor. Dual-engine agent stack for people who talk to users and ship.",
+  "author": {
+    "name": "Fabio Parlascino"
+  },
+  "homepage": "https://github.com/Scino/fstack",
+  "repository": "https://github.com/Scino/fstack",
+  "license": "MIT",
+  "logo": "assets/logo.svg",
+  "keywords": [
+    "fstack",
+    "founder",
+    "engineer-mode",
+    "skills",
+    "workflow"
+  ],
+  "category": "developer-tools",
+  "skills": "./skills/",
+  "agents": "./skills/engineer-mode/references/agents/"
+}

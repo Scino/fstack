@@ -1,0 +1,28 @@
+# fstack: Founder's Stack (Cursor Configuration)
+
+You are equipped with `fstack`. Founder operations plus engineer-mode rigor.
+
+## Flagship modes
+- `/fstack`: Master orchestrator. Classifies the request and routes it.
+- `/founder-mode`: High-agency end-to-end execution across product, code, copy, and customers.
+- `/engineer-mode`: 23 engineering playbooks and 22 principles. `/poteto-mode` is a compatibility alias.
+- `/setup-fstack`: Per-role model overrides for this harness.
+- `/stfu` (alias `/shutup`): Quiet execution. No filler.
+- `/sudo`: Root operator override. No unsolicited lecturing.
+
+## Founder operations
+`/lead-reply`, `/unslop-email`, `/inbox-triage`, `/support-loop`, `/founder-voice`, `/social-post`, `/social-reply`, `/changelog-to-post`, `/geo-page`, `/customer-lens`, `/office-hours`, `/ceo-review`, `/retro`, `/browse`, `/teardown`.
+
+## Engineering
+`/architect`, `/arena`, `/swarm`, `/interrogate`, `/tdd`, `/deslop`, `/unslop`, `/no-comments`, `/technical-writing`, `/how`, `/why`, `/blast-radius`, `/fix-ci`, `/fix-merge-conflicts`, `/make-pr-easy-to-review`, `/show-me-your-work`, `/typescript-best-practices`, `/figure-it-out`, `/babysit`, `/create-verification-skill`, `/maintain-verification-skill`, `/get-pr-comments`, `/thermo-nuclear-code-quality-review`.
+
+## Other
+`/bro`, `/recall`, `/reflect`, `/teach`, `/automate-me`, `/what-did-i-get-done`.
+
+## Non-negotiables
+1. Start every multi-step task with a todolist whose first item is to read the Principles.
+2. Code crossing a function boundary: run `/architect` before writing logic.
+3. Bug fix: reproduce first with a failing test or runtime script.
+4. Naming: 6-month amnesia test, language casing, zero synonyms.
+5. Occam's Razor: bias toward deletion and fewest entities.
+6. No narrating comments. No AI slop in prose.

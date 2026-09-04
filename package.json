@@ -1,0 +1,66 @@
+{
+  "name": "@scino/fstack",
+  "version": "1.0.0",
+  "description": "fstack, Fabio's Stack / Founder's Stack, by Fabio Parlascino. Founder operations plus engineer-mode rigor. Works in Cursor, Claude Code, Codex, Antigravity, OpenCode, Hermes, OpenClaw, and any agent that loads Agent Skills.",
+  "author": "Fabio Parlascino",
+  "main": "bin/fstack.js",
+  "bin": {
+    "fstack": "bin/fstack.js"
+  },
+  "files": [
+    "bin",
+    "skills",
+    "tools",
+    "adapters",
+    "assets",
+    "models.json",
+    "setup.sh",
+    "setup.ps1",
+    "README.md",
+    "ARCHITECTURE.md",
+    "GUIDE.md",
+    "AGENTS.md",
+    "LICENSE",
+    ".cursor-plugin",
+    ".codex-plugin",
+    ".claude-plugin"
+  ],
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "validate": "node tools/validate-skills.mjs",
+    "test": "node tools/test-suite.mjs",
+    "install:cursor": "node tools/installer.mjs --target cursor",
+    "install:claude": "node tools/installer.mjs --target claude",
+    "install:codex": "node tools/installer.mjs --target codex",
+    "install:antigravity": "node tools/installer.mjs --target antigravity",
+    "install:agents": "node tools/installer.mjs --target agents",
+    "install:all": "node tools/installer.mjs --all"
+  },
+  "keywords": [
+    "agent-skills",
+    "cursor",
+    "claude-code",
+    "antigravity",
+    "codex",
+    "hermes",
+    "opencode",
+    "engineer-mode",
+    "founder",
+    "ai-agents"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/Scino/fstack",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Scino/fstack.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Scino/fstack/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
