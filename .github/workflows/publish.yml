@@ -19,9 +19,15 @@ jobs:
         with:
           node-version: '24'
           registry-url: 'https://registry.npmjs.org'
+          cache: npm
 
       - name: Use npm with trusted publishing support
         run: npm install -g npm@11.6.2
+
+      - run: npm ci
+
+      - name: Install Chromium for browse tests
+        run: npx --yes playwright install --with-deps chromium
 
       - name: Verify tag matches package version
         if: github.event_name == 'release'

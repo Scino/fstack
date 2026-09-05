@@ -1,6 +1,6 @@
 {
   "name": "@scino/fstack",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "fstack, Founder's Stack (and Fabio's Stack), by Fabio Parlascino. Founder operations plus engineer-mode rigor. Works in Cursor, Claude Code, Codex, Antigravity, OpenCode, Hermes, OpenClaw, and any agent that loads Agent Skills.",
   "author": "Fabio Parlascino",
   "main": "bin/fstack.js",

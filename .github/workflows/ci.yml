@@ -12,5 +12,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Install Chromium for browse tests
+        run: npx --yes playwright install --with-deps chromium
       - run: node tools/test-suite.mjs
       - run: node tools/validate-skills.mjs

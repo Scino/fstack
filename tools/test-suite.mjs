@@ -238,13 +238,19 @@ try {
   try {
     const empty = await browseCli('text', `${origin}/empty`);
     const emptyOut = `${empty.stdout}\n${empty.stderr}`;
-    assert(empty.status !== 0, 'empty body exits non-zero');
-    assert(/Empty page text/i.test(emptyOut), 'empty body prints Empty page text');
-    assert(emptyOut.includes(`${origin}/empty`), 'empty body error includes the URL');
+    const browserMissing = /Could not launch Chrome|Browse needs playwright-core|Executable doesn't exist/i.test(emptyOut);
+    if (browserMissing) {
+      console.log(`  SKIP: browse browser unavailable (${emptyOut.trim().split('\n')[0] || 'no browser'})`);
+    } else {
+      assert(empty.status !== 0, 'empty body exits non-zero');
+      assert(/Empty page text/i.test(emptyOut), `empty body prints Empty page text (got: ${emptyOut.trim().slice(0, 200)})`);
+      assert(emptyOut.includes(`${origin}/empty`), `empty body error includes the URL (got: ${emptyOut.trim().slice(0, 200)})`);
 
-    const late = await browseCli('text', `${origin}/late`);
-    assert(late.status === 0, 'late-hydrating page exits zero');
-    assert((late.stdout || '').includes('hydrated campaign cards'), 'late-hydrating page waits for body text');
+      const late = await browseCli('text', `${origin}/late`);
+      const lateOut = `${late.stdout}\n${late.stderr}`;
+      assert(late.status === 0, `late-hydrating page exits zero (got: ${lateOut.trim().slice(0, 200)})`);
+      assert((late.stdout || '').includes('hydrated campaign cards'), 'late-hydrating page waits for body text');
+    }
   } finally {
     server.close();
   }
