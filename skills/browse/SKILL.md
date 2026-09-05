@@ -1,6 +1,6 @@
 ---
 name: browse
-description: Anti-bot web browsing and extraction. Attaches to your real Chrome over CDP when it is running, otherwise one-shot headless Chrome. Use for /browse, "open URL", competitor pages, or scraping a logged-in session.
+description: Anti-bot web browsing and extraction. Attaches to your real Chrome over CDP when it is running, otherwise one-shot headless Chrome. Use for /browse, "open URL", competitor pages, interactive search UIs, or a logged-in session.
 menu-description: anti-bot browser automation and web extraction
 ---
 
@@ -44,15 +44,35 @@ fstack browse sanitize ./raw.txt
 
 `goto` / `text` / `screenshot` / `eval` without a URL need Chrome CDP (your session). With a URL they can run headless in one shot.
 
-## Strategy 1: Real Chrome (logged-in sites)
+`text` waits for visible body text, then fails if the body is still empty. That is usually a search shell, a bot wall, or JS that never painted. Do not retry the same URL. Search or click, then `text` again.
 
-LinkedIn, X, Facebook Ads Library, Cloudflare-gated apps. Start Chrome once:
+## Strategy 1: One-shot headless
 
-**Windows:**
+Public pages where the URL already has the content. Pass the URL on the command.
+
+```bash
+fstack browse text https://example.com
+```
+
+Uses installed Chrome when possible, with webdriver masking and chrome.runtime spoofing. Text is injection-sanitized.
+
+## Strategy 2: Real Chrome (interaction and login-walled sites)
+
+Use CDP when you need to type, click, or wait on a page, or when headless is blocked.
+
+Empty extract is not a login problem by itself. Many public UIs start as a search shell. Attach CDP, complete the query or click in that window (or `goto` a URL that already encodes the query), wait until results exist, then `fstack browse text` with no URL.
+
+Login-walled sites (LinkedIn, X, and similar) still need you to log in by hand in that Chrome.
+
+Start Chrome once:
+
+**Windows** (throwaway profile; does not fight an already-open Chrome):
 
 ```powershell
-& "C:\Program Files\Google\Chrome\Application\chrome.exe" --remote-debugging-port=9222 --user-data-dir="$env:LOCALAPPDATA\Google\Chrome\User Data"
+& "C:\Program Files\Google\Chrome\Application\chrome.exe" --remote-debugging-port=9222 --user-data-dir="$env:TEMP\chrome-fstack-cdp"
 ```
+
+To reuse your real cookies, quit Chrome first, then point `--user-data-dir` at `$env:LOCALAPPDATA\Google\Chrome\User Data`.
 
 **macOS:**
 
@@ -60,11 +80,7 @@ LinkedIn, X, Facebook Ads Library, Cloudflare-gated apps. Start Chrome once:
 /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222
 ```
 
-Log in by hand. Then `goto` / `text` / `screenshot` reuse that Chrome (cookies, IP, GPU). Confirm with `fstack browse check-cdp`.
-
-## Strategy 2: One-shot headless
-
-Public pages with no login. Pass the URL on the command. Uses installed Chrome when possible, with webdriver masking and chrome.runtime spoofing. Text is injection-sanitized.
+Confirm with `fstack browse check-cdp`.
 
 ## Strategy 3: Harness native browser
 

@@ -4,9 +4,11 @@
  */
 
 import fs from 'node:fs';
+import http from 'node:http';
 import os from 'node:os';
 import path from 'node:path';
-import { sanitizePageText, STEALTH_SCRIPT, BROWSE_COMMANDS } from './stealth-browser.mjs';
+import { spawn } from 'node:child_process';
+import { sanitizePageText, STEALTH_SCRIPT, BROWSE_COMMANDS, formatEmptyPageError } from './stealth-browser.mjs';
 import { getHarnessDefinitions, installToTarget, pruneStaleSkills } from './installer.mjs';
 import { PACKAGE_ROOT, SKILLS_DIR, MODELS_PATH } from './package-root.mjs';
 import { loadCatalog } from './catalog.mjs';
@@ -60,6 +62,12 @@ try {
   assert(BROWSE_COMMANDS.includes('text'), 'browse CLI implements text');
   assert(BROWSE_COMMANDS.includes('screenshot'), 'browse CLI implements screenshot');
   assert(BROWSE_COMMANDS.includes('eval'), 'browse CLI implements eval');
+  const emptyMsg = formatEmptyPageError({ url: 'https://example.com/search', title: 'Search' });
+  assert(emptyMsg.includes('Empty page text.'), 'empty extract error names the failure');
+  assert(emptyMsg.includes('https://example.com/search'), 'empty extract error includes the URL');
+  assert(emptyMsg.includes('Search'), 'empty extract error includes the title');
+  assert(/search shell/i.test(emptyMsg), 'empty extract error mentions a search shell');
+  assert(!/log in/i.test(emptyMsg), 'empty extract error does not tell agents to log in');
 } catch (err) {
   assert(false, `Stealth browser test crashed: ${err.message}`);
 }
@@ -109,6 +117,11 @@ try {
   const alias = fs.readFileSync(path.join(SKILLS_DIR, 'poteto-mode', 'SKILL.md'), 'utf8');
   assert(alias.includes('engineer-mode'), 'poteto-mode alias points at engineer-mode');
   assert(!fs.existsSync(path.join(SKILLS_DIR, 'setup-pstack')), 'setup-pstack directory is gone');
+
+  const browseSkill = fs.readFileSync(path.join(SKILLS_DIR, 'browse', 'SKILL.md'), 'utf8');
+  assert(/search shell/i.test(browseSkill), 'browse skill explains empty search shells');
+  assert(!/Facebook Ads Library/i.test(browseSkill), 'browse skill does not hardcode Facebook Ads Library');
+  assert(/chrome-fstack-cdp/i.test(browseSkill), 'browse skill uses a dedicated Windows CDP profile');
 } catch (err) {
   assert(false, `Skills test crashed: ${err.message}`);
 }
@@ -176,6 +189,67 @@ try {
   assert(!fs.existsSync(path.join(PACKAGE_ROOT, '.agents', 'skills')), '.agents/skills was not created in the fstack repo');
 } catch (err) {
   assert(false, `Installer prune test crashed: ${err.message}`);
+}
+
+function listenHtml(routes) {
+  const server = http.createServer((req, res) => {
+    res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' });
+    res.end(routes[req.url] ?? '<html><body></body></html>');
+  });
+  return new Promise((resolve) => {
+    server.listen(0, '127.0.0.1', () => {
+      resolve({ server, port: server.address().port });
+    });
+  });
+}
+
+function browseCli(...args) {
+  return new Promise((resolve, reject) => {
+    const child = spawn(process.execPath, [path.join(PACKAGE_ROOT, 'bin', 'fstack.js'), 'browse', ...args], {
+      cwd: PACKAGE_ROOT,
+      env: { ...process.env, FSTACK_BROWSE_TEXT_WAIT_MS: '2000' }
+    });
+    let stdout = '';
+    let stderr = '';
+    const timer = setTimeout(() => {
+      child.kill();
+      reject(new Error(`browse timed out: ${args.join(' ')}`));
+    }, 45000);
+    child.stdout.on('data', (chunk) => { stdout += chunk; });
+    child.stderr.on('data', (chunk) => { stderr += chunk; });
+    child.on('error', (err) => {
+      clearTimeout(timer);
+      reject(err);
+    });
+    child.on('close', (status) => {
+      clearTimeout(timer);
+      resolve({ status, stdout, stderr });
+    });
+  });
+}
+
+console.log('\n[Test Suite 7: Browse empty and late text]');
+try {
+  const { server, port } = await listenHtml({
+    '/empty': '<html><head><title>Blank Shell</title></head><body>   </body></html>',
+    '/late': '<html><body><script>setTimeout(() => { document.body.textContent = "hydrated campaign cards"; }, 400);</script></body></html>'
+  });
+  const origin = `http://127.0.0.1:${port}`;
+  try {
+    const empty = await browseCli('text', `${origin}/empty`);
+    const emptyOut = `${empty.stdout}\n${empty.stderr}`;
+    assert(empty.status !== 0, 'empty body exits non-zero');
+    assert(/Empty page text/i.test(emptyOut), 'empty body prints Empty page text');
+    assert(emptyOut.includes(`${origin}/empty`), 'empty body error includes the URL');
+
+    const late = await browseCli('text', `${origin}/late`);
+    assert(late.status === 0, 'late-hydrating page exits zero');
+    assert((late.stdout || '').includes('hydrated campaign cards'), 'late-hydrating page waits for body text');
+  } finally {
+    server.close();
+  }
+} catch (err) {
+  assert(false, `Browse engine test crashed: ${err.message}`);
 }
 
 console.log('\n=========================================');

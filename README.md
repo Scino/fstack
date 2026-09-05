@@ -143,8 +143,8 @@ Say `/fstack` when you do not want to pick. Say the specific skill when you alre
 
 Naive scrapers die on LinkedIn, X, and Cloudflare. `/browse` drives a real browser.
 
-1. Attach to your Chrome over CDP (`--remote-debugging-port=9222`). Cookies, residential IP, GPU. This is how you research a logged-in competitor.
-2. One-shot headless Chrome for public pages (`fstack browse text https://example.com`). Masks `navigator.webdriver` and restores `window.chrome.runtime`.
+1. Attach to your Chrome over CDP (`--remote-debugging-port=9222`) when you need cookies, clicks, or a search UI. Empty landing pages are often search shells, not a login wall.
+2. One-shot headless Chrome for public pages whose URL already has the content (`fstack browse text https://example.com`). Masks `navigator.webdriver` and restores `window.chrome.runtime`. Empty body text fails instead of printing nothing.
 3. Whatever browser the host agent already has, when that is enough.
 
 Extracted text is sanitized before it hits the model. Zero-width characters and "ignore previous instructions" payloads get stripped. `/teardown` uses this so a pricing page cannot jailbreak the agent on the way through.

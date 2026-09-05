@@ -120,6 +120,41 @@ function takeUrl(args) {
   return { url: null, rest: args };
 }
 
+export function textWaitMs() {
+  const parsed = parseInt(process.env.FSTACK_BROWSE_TEXT_WAIT_MS || '8000', 10);
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : 8000;
+}
+
+export function formatEmptyPageError({ url, title } = {}) {
+  const lines = ['Empty page text.'];
+  if (url) lines.push(`URL: ${url}`);
+  if (title) lines.push(`Title: ${title}`);
+  lines.push('This is often a search shell that needs a query, a bot wall, or JS that has not painted.');
+  lines.push('If the page is interactive, attach Chrome CDP, complete the search or click in that window, then run: fstack browse text');
+  return lines.join('\n');
+}
+
+export async function waitUntilBodyHasText(page, timeoutMs = textWaitMs()) {
+  if (timeoutMs <= 0) return;
+  await page.waitForFunction(
+    () => (document.body?.innerText || '').trim().length > 0,
+    undefined,
+    { timeout: timeoutMs }
+  ).catch(() => {});
+}
+
+export async function readSanitizedBodyText(page) {
+  const raw = await page.innerText('body').catch(() => '');
+  const text = sanitizePageText(raw);
+  if (!text) {
+    throw new Error(formatEmptyPageError({
+      url: page.url(),
+      title: await page.title().catch(() => '')
+    }));
+  }
+  return text;
+}
+
 async function loadPlaywright() {
   try {
     return await import('playwright-core');
@@ -128,9 +163,10 @@ async function loadPlaywright() {
   }
 }
 
-async function withPage(url, fn) {
+async function withPage(url, fn, { waitForText = false } = {}) {
   const { chromium } = await loadPlaywright();
   const cdp = await checkChromeCDP();
+  const shouldWait = waitForText || Boolean(url);
 
   if (cdp.available) {
     const browser = await chromium.connectOverCDP(`http://127.0.0.1:${cdp.port}`);
@@ -140,6 +176,7 @@ async function withPage(url, fn) {
       if (url) {
         await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 45000 });
       }
+      if (shouldWait) await waitUntilBodyHasText(page);
       return await fn(page);
     } finally {
       await browser.close();
@@ -173,6 +210,7 @@ async function withPage(url, fn) {
     await context.addInitScript(STEALTH_SCRIPT);
     const page = await context.newPage();
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 45000 });
+    if (shouldWait) await waitUntilBodyHasText(page);
     return await fn(page);
   } finally {
     await browser.close();
@@ -196,8 +234,11 @@ Commands:
   sanitize <file>         Sanitize a local text file against prompt injection.
   help                    Show this help.
 
-Logged-in sites (LinkedIn, X, Facebook): start Chrome with
+Login-walled sites (LinkedIn, X, and similar): start Chrome with
 --remote-debugging-port=9222, then goto/text/screenshot reuse that session.
+
+Public search UIs need CDP to type and click, not to log in.
+Empty body text is an error. Do not retry the same URL.
 
 Without CDP, pass a URL on text/screenshot/eval for a one-shot headless visit.
 `);
@@ -255,7 +296,7 @@ export async function runBrowserCli(args = process.argv.slice(2)) {
 
     if (command === 'text') {
       const { url } = takeUrl(args.slice(1));
-      const text = await withPage(url, async (page) => sanitizePageText(await page.innerText('body')));
+      const text = await withPage(url, (page) => readSanitizedBodyText(page), { waitForText: true });
       console.log(text);
       return;
     }
@@ -265,7 +306,7 @@ export async function runBrowserCli(args = process.argv.slice(2)) {
       const outPath = rest[0] || 'browse.png';
       await withPage(url, async (page) => {
         await page.screenshot({ path: outPath, fullPage: true });
-      });
+      }, { waitForText: true });
       console.log(path.resolve(outPath));
       return;
     }

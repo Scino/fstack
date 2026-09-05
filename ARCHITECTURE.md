@@ -6,7 +6,7 @@
 
 1. **Dual-engine.** Founder operations and `/engineer-mode` stay separate. `/support-loop` is the bridge.
 2. **One skill format.** Every skill is a `SKILL.md` with Agent Skills frontmatter. Harness manifests at repo root point at `./skills/`.
-3. **Browsing with a spine.** `/browse` attaches to Chrome over CDP when it is running, otherwise one-shot headless Chrome. Extracted text is sanitized. Engine: `tools/stealth-browser.mjs`.
+3. **Browsing with a spine.** `/browse` attaches to Chrome over CDP when it is running, otherwise one-shot headless Chrome. It waits for visible body text and errors if the page stays empty. Extracted text is sanitized. Engine: `tools/stealth-browser.mjs`.
 
 ## Layout
 
