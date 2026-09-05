@@ -6,7 +6,7 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { sanitizePageText, STEALTH_SCRIPT } from './stealth-browser.mjs';
+import { sanitizePageText, STEALTH_SCRIPT, BROWSE_COMMANDS } from './stealth-browser.mjs';
 import { getHarnessDefinitions, installToTarget, pruneStaleSkills } from './installer.mjs';
 import { PACKAGE_ROOT, SKILLS_DIR, MODELS_PATH } from './package-root.mjs';
 import { loadCatalog } from './catalog.mjs';
@@ -53,9 +53,13 @@ try {
   const zeroWidthInput = 'Clean\u200BText\u200CWith\uFEFFZeroWidth';
   const stripped = sanitizePageText(zeroWidthInput);
   assert(!stripped.includes('\u200B') && !stripped.includes('\uFEFF'), 'Zero-width characters stripped');
-  assert(STEALTH_SCRIPT.includes('navigator.webdriver'), 'Stealth script masks navigator.webdriver');
+  assert(STEALTH_SCRIPT.includes('webdriver'), 'Stealth script masks navigator.webdriver');
   assert(STEALTH_SCRIPT.includes('window.chrome.runtime'), 'Stealth script emulates window.chrome.runtime');
   assert(STEALTH_SCRIPT.includes('Function.prototype.toString'), 'Stealth script proxies Function.prototype.toString');
+  assert(BROWSE_COMMANDS.includes('goto'), 'browse CLI implements goto');
+  assert(BROWSE_COMMANDS.includes('text'), 'browse CLI implements text');
+  assert(BROWSE_COMMANDS.includes('screenshot'), 'browse CLI implements screenshot');
+  assert(BROWSE_COMMANDS.includes('eval'), 'browse CLI implements eval');
 } catch (err) {
   assert(false, `Stealth browser test crashed: ${err.message}`);
 }

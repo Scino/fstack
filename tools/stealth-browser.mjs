@@ -1,9 +1,7 @@
 #!/usr/bin/env node
 /**
- * fstack Stealth Browser Engine
- * 
- * Provides anti-bot stealth countermeasures, Chrome CDP attach capabilities,
- * and L1 prompt-injection sanitization for AI agent browsing.
+ * fstack browse engine.
+ * Attach to Chrome CDP when available; otherwise one-shot Playwright launch.
  */
 
 import http from 'node:http';
@@ -11,10 +9,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-// --- Anti-Bot Stealth Init Script ---
+export const BROWSE_COMMANDS = ['check-cdp', 'sanitize', 'goto', 'text', 'screenshot', 'eval', 'help'];
+
 export const STEALTH_SCRIPT = `
 (function() {
-  // 1. Mask navigator.webdriver
   try {
     Object.defineProperty(navigator, 'webdriver', {
       get: () => undefined,
@@ -22,7 +20,6 @@ export const STEALTH_SCRIPT = `
     });
   } catch (e) {}
 
-  // 2. Emulate window.chrome properties (Checked by Cloudflare / DataDome)
   try {
     if (!window.chrome) {
       window.chrome = {};
@@ -39,7 +36,6 @@ export const STEALTH_SCRIPT = `
     window.chrome.loadTimes = window.chrome.loadTimes || function() { return { requestTime: Date.now() / 1000, startLoadTime: Date.now() / 1000, commitLoadTime: Date.now() / 1000, finishDocumentLoadTime: Date.now() / 1000, finishLoadTime: Date.now() / 1000, firstPaintTime: Date.now() / 1000, firstPaintAfterLoadTime: 0, navigationType: 'Other', wasFetchedViaSpdy: false, wasNpnNegotiated: false, npnNegotiatedProtocol: '', wasAlternateProtocolAvailable: false, connectionInfo: 'http/1.1' }; };
   } catch (e) {}
 
-  // 3. Patch Function.prototype.toString to hide Proxies
   try {
     const originalToString = Function.prototype.toString;
     const toStringProxy = new Proxy(originalToString, {
@@ -56,7 +52,6 @@ export const STEALTH_SCRIPT = `
     Function.prototype.toString = toStringProxy;
   } catch (e) {}
 
-  // 4. Permissions API alignment
   try {
     const originalQuery = window.navigator.permissions?.query;
     if (originalQuery) {
@@ -71,16 +66,12 @@ export const STEALTH_SCRIPT = `
 })();
 `;
 
-// --- Prompt Injection Defense Sanitizer ---
 export function sanitizePageText(rawText) {
   if (!rawText || typeof rawText !== 'string') return '';
 
   let text = rawText;
-
-  // 1. Remove zero-width characters and homoglyph traps
   text = text.replace(/[\u200B-\u200D\uFEFF\u200E\u200F]/g, '');
 
-  // 2. Neutralize known agent prompt injection phrases
   const injectionPatterns = [
     /\[\s*system\s*:\s*ignore\s+previous\s+instructions[^\]]*\]/gi,
     /ignore\s+(all\s+)?previous\s+instructions\s+and\s+(do|say|print)/gi,
@@ -93,22 +84,18 @@ export function sanitizePageText(rawText) {
     text = text.replace(pattern, '[REDACTED_PROMPT_INJECTION_RISK]');
   }
 
-  // 3. Normalize excessive whitespace
-  text = text.replace(/\n{3,}/g, '\n\n').trim();
-
-  return text;
+  return text.replace(/\n{3,}/g, '\n\n').trim();
 }
 
-// --- Check Chrome CDP Availability ---
 export async function checkChromeCDP(port = 9222) {
   return new Promise((resolve) => {
     const req = http.get(`http://127.0.0.1:${port}/json/version`, { timeout: 1500 }, (res) => {
       let data = '';
-      res.on('data', chunk => { data += chunk; });
+      res.on('data', (chunk) => { data += chunk; });
       res.on('end', () => {
         try {
           const info = JSON.parse(data);
-          resolve({ available: true, info });
+          resolve({ available: true, info, port });
         } catch {
           resolve({ available: false, error: 'Invalid JSON from CDP' });
         }
@@ -122,26 +109,105 @@ export async function checkChromeCDP(port = 9222) {
   });
 }
 
-// --- CLI Execution ---
-export async function runBrowserCli(args = process.argv.slice(2)) {
-  const command = args[0] || 'help';
+function isHttpUrl(value) {
+  return typeof value === 'string' && /^https?:\/\//i.test(value);
+}
 
-  if (command === 'help') {
-    console.log(`
-fstack Stealth Browser Engine
+function takeUrl(args) {
+  if (isHttpUrl(args[0])) {
+    return { url: args[0], rest: args.slice(1) };
+  }
+  return { url: null, rest: args };
+}
+
+async function loadPlaywright() {
+  try {
+    return await import('playwright-core');
+  } catch {
+    throw new Error('Browse needs playwright-core. From the fstack repo: npm install. Or: npm install playwright-core');
+  }
+}
+
+async function withPage(url, fn) {
+  const { chromium } = await loadPlaywright();
+  const cdp = await checkChromeCDP();
+
+  if (cdp.available) {
+    const browser = await chromium.connectOverCDP(`http://127.0.0.1:${cdp.port}`);
+    try {
+      const context = browser.contexts()[0] || await browser.newContext();
+      const page = context.pages()[0] || await context.newPage();
+      if (url) {
+        await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 45000 });
+      }
+      return await fn(page);
+    } finally {
+      await browser.close();
+    }
+  }
+
+  if (!url) {
+    throw new Error('No Chrome CDP on port 9222. Pass a URL, or start Chrome with --remote-debugging-port=9222 and try again.');
+  }
+
+  let browser;
+  try {
+    browser = await chromium.launch({
+      channel: 'chrome',
+      headless: true,
+      args: ['--disable-blink-features=AutomationControlled']
+    });
+  } catch (chromeErr) {
+    try {
+      browser = await chromium.launch({
+        headless: true,
+        args: ['--disable-blink-features=AutomationControlled']
+      });
+    } catch {
+      throw new Error(`Could not launch Chrome (${chromeErr.message}). Install Chrome, or run: npx playwright install chromium`);
+    }
+  }
+
+  try {
+    const context = await browser.newContext();
+    await context.addInitScript(STEALTH_SCRIPT);
+    const page = await context.newPage();
+    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 45000 });
+    return await fn(page);
+  } finally {
+    await browser.close();
+  }
+}
+
+function printHelp() {
+  console.log(`
+fstack browse
 
 Usage:
+  fstack browse <command> [arguments]
   node tools/stealth-browser.mjs <command> [arguments]
 
 Commands:
-  check-cdp [port]        Check if real Chrome is running with remote debugging (default: 9222)
-  sanitize <file>         Sanitize raw HTML/text file against prompt injections
-  help                    Show this help guide
+  goto <url>              Navigate. Stateful when Chrome CDP is up.
+  text [url]              Sanitized visible text of the current or given page.
+  screenshot [url] [path] PNG of the current or given page (default: browse.png).
+  eval [url] <expr>       Evaluate JavaScript in the page.
+  check-cdp [port]        Check Chrome remote debugging (default: 9222).
+  sanitize <file>         Sanitize a local text file against prompt injection.
+  help                    Show this help.
 
-Strategies:
-  1. Real Chrome Attach: Start Chrome with --remote-debugging-port=9222 for 100% anti-bot stealth.
-  2. Standalone Stealth: Uses built-in webdriver & runtime spoofing.
+Logged-in sites (LinkedIn, X, Facebook): start Chrome with
+--remote-debugging-port=9222, then goto/text/screenshot reuse that session.
+
+Without CDP, pass a URL on text/screenshot/eval for a one-shot headless visit.
 `);
+}
+
+export async function runBrowserCli(args = process.argv.slice(2)) {
+  const command = args[0] || 'help';
+
+  if (command === 'help' || command === '--help' || command === '-h') {
+    printHelp();
     return;
   }
 
@@ -150,7 +216,7 @@ Strategies:
     console.log(`Checking for Chrome CDP on 127.0.0.1:${port}...`);
     const status = await checkChromeCDP(port);
     if (status.available) {
-      console.log(`[SUCCESS] Chrome CDP is active!`);
+      console.log('[SUCCESS] Chrome CDP is active.');
       console.log(`Browser: ${status.info.Browser}`);
       console.log(`Protocol: ${status.info['Protocol-Version']}`);
       console.log(`WebSocket Debugger URL: ${status.info.webSocketDebuggerUrl}`);
@@ -165,15 +231,65 @@ Strategies:
     const filePath = args[1];
     if (!filePath || !fs.existsSync(filePath)) {
       console.error('Error: File path required.');
-      process.exit(1);
+      process.exitCode = 1;
+      return;
     }
     const content = fs.readFileSync(filePath, 'utf8');
-    const sanitized = sanitizePageText(content);
-    console.log(sanitized);
+    console.log(sanitizePageText(content));
     return;
   }
 
-  console.log(`Unknown command: ${command}. Run with 'help' for usage.`);
+  try {
+    if (command === 'goto') {
+      const url = args[1];
+      if (!isHttpUrl(url)) {
+        console.error('Error: goto needs an http(s) URL.');
+        process.exitCode = 1;
+        return;
+      }
+      const title = await withPage(url, (page) => page.title());
+      console.log(`OK ${url}`);
+      if (title) console.log(title);
+      return;
+    }
+
+    if (command === 'text') {
+      const { url } = takeUrl(args.slice(1));
+      const text = await withPage(url, async (page) => sanitizePageText(await page.innerText('body')));
+      console.log(text);
+      return;
+    }
+
+    if (command === 'screenshot') {
+      const { url, rest } = takeUrl(args.slice(1));
+      const outPath = rest[0] || 'browse.png';
+      await withPage(url, async (page) => {
+        await page.screenshot({ path: outPath, fullPage: true });
+      });
+      console.log(path.resolve(outPath));
+      return;
+    }
+
+    if (command === 'eval') {
+      const { url, rest } = takeUrl(args.slice(1));
+      const expr = rest.join(' ').trim();
+      if (!expr) {
+        console.error('Error: eval needs a JavaScript expression.');
+        process.exitCode = 1;
+        return;
+      }
+      const result = await withPage(url, async (page) => page.evaluate(expr));
+      console.log(typeof result === 'string' ? result : JSON.stringify(result, null, 2));
+      return;
+    }
+  } catch (err) {
+    console.error(err.message || String(err));
+    process.exitCode = 1;
+    return;
+  }
+
+  console.error(`Unknown command: ${command}. Run with 'help' for usage.`);
+  process.exitCode = 1;
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(fileURLToPath(import.meta.url))) {

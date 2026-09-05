@@ -1,6 +1,6 @@
 {
   "name": "@scino/fstack",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "fstack, Founder's Stack (and Fabio's Stack), by Fabio Parlascino. Founder operations plus engineer-mode rigor. Works in Cursor, Claude Code, Codex, Antigravity, OpenCode, Hermes, OpenClaw, and any agent that loads Agent Skills.",
   "author": "Fabio Parlascino",
   "main": "bin/fstack.js",
@@ -29,6 +29,9 @@
   "type": "module",
   "engines": {
     "node": ">=18"
+  },
+  "dependencies": {
+    "playwright-core": "^1.63.0"
   },
   "scripts": {
     "validate": "node tools/validate-skills.mjs",

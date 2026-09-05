@@ -34,7 +34,7 @@ Commands:
   update [--all|--target <name>]    Same as install. Relink the current skills.
   status / doctor                   Detect harnesses and verify skill health
   validate                          Validate all skills against the Agent Skills RFC
-  browse <args>                     Stealth browser engine (check-cdp / sanitize)
+  browse <args>                     Browser engine (goto / text / screenshot / eval)
   help                              Show this documentation
 
 Targets:

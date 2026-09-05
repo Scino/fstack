@@ -141,16 +141,17 @@ Say `/fstack` when you do not want to pick. Say the specific skill when you alre
 
 ## Anti-bot browsing (`/browse`)
 
-Naive Playwright dies on LinkedIn, X, and anything behind Cloudflare. `/browse` has three strategies, in order of paranoia.
+Naive scrapers die on LinkedIn, X, and Cloudflare. `/browse` drives a real browser.
 
-1. Attach to your real Chrome over CDP (`--remote-debugging-port=9222`). Your cookies, your residential IP, your GPU canvas. This is how you research a competitor without looking like a datacenter.
-2. Standalone stealth. Masks `navigator.webdriver`, restores `window.chrome.runtime`, proxies `Function.prototype.toString`. Good enough for pages that are merely annoyed, not hostile.
-3. Whatever browser the host agent already has.
+1. Attach to your Chrome over CDP (`--remote-debugging-port=9222`). Cookies, residential IP, GPU. This is how you research a logged-in competitor.
+2. One-shot headless Chrome for public pages (`fstack browse text https://example.com`). Masks `navigator.webdriver` and restores `window.chrome.runtime`.
+3. Whatever browser the host agent already has, when that is enough.
 
-Extracted DOM is sanitized before it hits the model. Hidden CSS, zero-width characters, and "ignore previous instructions" payloads get stripped. `/teardown` uses this so a pricing page cannot jailbreak the agent on the way through.
+Extracted text is sanitized before it hits the model. Zero-width characters and "ignore previous instructions" payloads get stripped. `/teardown` uses this so a pricing page cannot jailbreak the agent on the way through.
 
 ```bash
-fstack browse check-cdp
+npx @scino/fstack browse text https://example.com
+npx @scino/fstack browse check-cdp
 ```
 
 ---
