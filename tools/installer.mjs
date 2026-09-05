@@ -66,6 +66,10 @@ export function getHarnessDefinitions(customHome = HOME) {
   ];
 }
 
+export function isPackageLocalAgentsPath(dest) {
+  return path.resolve(dest) === path.resolve(PACKAGE_ROOT, '.agents', 'skills');
+}
+
 export function detectInstalledHarnesses(customHome = HOME) {
   return getHarnessDefinitions(customHome).map((h) => ({
     ...h,
@@ -94,6 +98,39 @@ function linkOrCopy(src, dest, useCopy) {
   fs.cpSync(src, dest, { recursive: true });
 }
 
+function resolveLinkTarget(dest) {
+  try {
+    if (!fs.lstatSync(dest).isSymbolicLink()) return null;
+    const raw = fs.readlinkSync(dest);
+    return path.resolve(path.dirname(dest), raw);
+  } catch {
+    return null;
+  }
+}
+
+function isOwnedSkillLink(dest) {
+  const target = resolveLinkTarget(dest);
+  if (!target) return false;
+  const skillsRoot = path.resolve(SKILLS_DIR);
+  return target === skillsRoot || target.startsWith(skillsRoot + path.sep);
+}
+
+export function pruneStaleSkills(targetSkillsDir) {
+  if (!targetSkillsDir || !fs.existsSync(targetSkillsDir)) return 0;
+  const current = new Set(listSkillNames());
+  let removed = 0;
+  for (const entry of fs.readdirSync(targetSkillsDir, { withFileTypes: true })) {
+    if (!entry.isDirectory() && !entry.isSymbolicLink()) continue;
+    if (entry.name.startsWith('.')) continue;
+    if (current.has(entry.name)) continue;
+    const dest = path.join(targetSkillsDir, entry.name);
+    if (!isOwnedSkillLink(dest)) continue;
+    fs.rmSync(dest, { recursive: true, force: true });
+    removed++;
+  }
+  return removed;
+}
+
 function removeLegacyCursorSkills(legacySkillsPath) {
   if (!legacySkillsPath || !fs.existsSync(legacySkillsPath)) return 0;
   let removed = 0;
@@ -104,7 +141,7 @@ function removeLegacyCursorSkills(legacySkillsPath) {
       removed++;
     }
   }
-  return removed;
+  return removed + pruneStaleSkills(legacySkillsPath);
 }
 
 function installPlugin(targetDef, options = {}) {
@@ -136,6 +173,11 @@ function installPlugin(targetDef, options = {}) {
 }
 
 export function installToTarget(targetDef, options = {}) {
+  if (isPackageLocalAgentsPath(targetDef.path)) {
+    console.log('\nSkipping project .agents/skills inside the fstack repo (would duplicate skills/).');
+    return { success: true, skipped: true };
+  }
+
   if (targetDef.mode === 'plugin') {
     return installPlugin(targetDef, options);
   }
@@ -167,6 +209,10 @@ export function installToTarget(targetDef, options = {}) {
       installedCount++;
     }
 
+    const pruned = pruneStaleSkills(targetSkillsDir);
+    if (pruned > 0) {
+      console.log(`  Removed ${pruned} leftover skills from a previous install.`);
+    }
     console.log(`  Installed ${installedCount} skills into ${targetDef.name}.`);
     return { success: true, count: installedCount };
   } catch (err) {
@@ -177,6 +223,10 @@ export function installToTarget(targetDef, options = {}) {
 
 export function installLocalProject(options = {}) {
   const cwd = process.cwd();
+  if (path.resolve(cwd) === path.resolve(PACKAGE_ROOT)) {
+    console.log('\nDo not run init inside the fstack repo. skills/ is already the source of truth.');
+    return;
+  }
   console.log(`\nInitializing fstack locally in project: ${cwd}`);
 
   const targets = [

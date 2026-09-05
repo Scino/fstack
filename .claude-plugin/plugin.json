@@ -1,6 +1,6 @@
 {
   "name": "fstack",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Founder operations plus engineering rigor. Dual-engine agent stack for people who talk to users and ship.",
   "author": {
     "name": "Fabio Parlascino"

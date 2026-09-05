@@ -8,16 +8,20 @@ import fs from 'node:fs';
 import { runInstaller } from '../tools/installer.mjs';
 import { validateAllSkills } from '../tools/validate-skills.mjs';
 import { runBrowserCli } from '../tools/stealth-browser.mjs';
-import { MODELS_PATH, SKILLS_DIR } from '../tools/package-root.mjs';
+import { PACKAGE_ROOT, MODELS_PATH, SKILLS_DIR } from '../tools/package-root.mjs';
 import { loadCatalog } from '../tools/catalog.mjs';
 
 const args = process.argv.slice(2);
 const command = args[0] || 'help';
 
+function packageVersion() {
+  return JSON.parse(fs.readFileSync(path.join(PACKAGE_ROOT, 'package.json'), 'utf8')).version;
+}
+
 function showHelp() {
   const { totals } = loadCatalog();
   console.log(`
-fstack — Founder's Stack (v1.0.0)  @scino/fstack
+fstack — Founder's Stack (v${packageVersion()})  @scino/fstack
 Harness-agnostic agent stack: founder operations plus engineer-mode.
 
 Usage:
@@ -27,6 +31,7 @@ Usage:
 Commands:
   init                              Install into the current project (.agents/skills)
   install [--all|--target <name>]   Install into detected AI harnesses
+  update [--all|--target <name>]    Same as install. Relink the current skills.
   status / doctor                   Detect harnesses and verify skill health
   validate                          Validate all skills against the Agent Skills RFC
   browse <args>                     Stealth browser engine (check-cdp / sanitize)
@@ -53,6 +58,7 @@ Flagship modes:
 function doctorCheck() {
   const { totals } = loadCatalog();
   console.log('\n=== fstack Doctor ===\n');
+  console.log(`package: @scino/fstack@${packageVersion()}`);
   console.log(`Node.js: ${process.version}`);
 
   if (fs.existsSync(MODELS_PATH)) {
@@ -78,6 +84,7 @@ async function main() {
       runInstaller(['--local']);
       break;
     case 'install':
+    case 'update':
       runInstaller(args.slice(1));
       break;
     case 'status':

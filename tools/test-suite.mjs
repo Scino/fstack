@@ -4,9 +4,10 @@
  */
 
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { sanitizePageText, STEALTH_SCRIPT } from './stealth-browser.mjs';
-import { getHarnessDefinitions } from './installer.mjs';
+import { getHarnessDefinitions, installToTarget, pruneStaleSkills } from './installer.mjs';
 import { PACKAGE_ROOT, SKILLS_DIR, MODELS_PATH } from './package-root.mjs';
 import { loadCatalog } from './catalog.mjs';
 
@@ -129,6 +130,48 @@ try {
   assert(fs.existsSync(path.join(PACKAGE_ROOT, 'assets', 'logo.svg')), 'logo asset exists');
 } catch (err) {
   assert(false, `Package surface test crashed: ${err.message}`);
+}
+
+console.log('\n[Test Suite 6: Installer prune and version]');
+try {
+  const help = fs.readFileSync(path.join(PACKAGE_ROOT, 'bin', 'fstack.js'), 'utf8');
+  assert(help.includes('package.json'), 'CLI help reads version from package.json');
+  assert(!help.includes('v1.0.0'), 'CLI help does not hardcode v1.0.0');
+  const dest = fs.mkdtempSync(path.join(os.tmpdir(), 'fstack-install-'));
+  const foreign = path.join(dest, 'tinybird');
+  const system = path.join(dest, '.system');
+  const stale = path.join(dest, 'setup-pstack');
+  fs.mkdirSync(foreign);
+  fs.mkdirSync(system);
+  fs.writeFileSync(path.join(foreign, 'keep.txt'), 'keep');
+  fs.symlinkSync(path.join(SKILLS_DIR, 'fstack'), stale, process.platform === 'win32' ? 'junction' : 'dir');
+
+  const result = installToTarget(
+    { id: 'test', name: 'Test harness', mode: 'skills', path: dest },
+    { useCopy: false }
+  );
+  assert(result.success === true, 'installToTarget succeeds against a temp dest');
+  assert(fs.existsSync(path.join(dest, 'engineer-mode')), 'install writes engineer-mode');
+  assert(fs.existsSync(path.join(dest, 'setup-fstack')), 'install writes setup-fstack');
+  assert(!fs.existsSync(stale), 'install removes renamed leftover setup-pstack');
+  assert(fs.existsSync(foreign), 'install does not delete foreign skills');
+  assert(fs.existsSync(system), 'install leaves dot directories alone');
+
+  const pruned = pruneStaleSkills(dest);
+  assert(pruned === 0, 'second prune is a no-op');
+
+  fs.rmSync(dest, { recursive: true, force: true });
+
+  const skipped = installToTarget({
+    id: 'agents',
+    name: 'Project Agent Skills (.agents/skills)',
+    mode: 'skills',
+    path: path.join(PACKAGE_ROOT, '.agents', 'skills')
+  });
+  assert(skipped.skipped === true, 'install skips .agents/skills inside the fstack repo');
+  assert(!fs.existsSync(path.join(PACKAGE_ROOT, '.agents', 'skills')), '.agents/skills was not created in the fstack repo');
+} catch (err) {
+  assert(false, `Installer prune test crashed: ${err.message}`);
 }
 
 console.log('\n=========================================');

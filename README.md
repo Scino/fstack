@@ -79,6 +79,33 @@ That writes `.agents/skills` for Hermes, OpenClaw, and anyone else who discovers
 
 ---
 
+## Update
+
+There is no separate updater. Re-run install. It relinks the current skill tree.
+
+From npm:
+
+```bash
+npx @scino/fstack@latest install --all
+```
+
+`update` is an alias for `install`:
+
+```bash
+npx @scino/fstack@latest update --all
+```
+
+If you cloned this repo, Cursor already follows the clone (the plugin is a junction). Still re-run install so Claude, Codex, and the rest pick up new skills:
+
+```bash
+git pull
+node bin/fstack.js install --all
+```
+
+Then reload the editor. `fstack doctor` prints the package version and what it found.
+
+---
+
 ## A morning with fstack
 
 Paste last night's inbox into `/inbox-triage`. You get P0 deal-blockers, P1 hot leads, P2 questions, P3 noise, and drafts instead of a guilt pile.
