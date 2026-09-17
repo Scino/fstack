@@ -2,6 +2,7 @@
 name: principle-clear-naming
 description: Apply when naming variables, functions, types, files, or endpoints. Enforces the 6-month amnesia test, language conventions, intent-based naming, and cross-boundary consistency.
 user-invocable: false
+disable-model-invocation: true
 ---
 
 # Clear Naming Discipline

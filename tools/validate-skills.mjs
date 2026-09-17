@@ -50,6 +50,9 @@ function validateSkill(skillName, skillDir) {
     if (skillName.startsWith('principle-') && frontmatter['user-invocable'] !== 'false') {
       errors.push('Principle skills must set user-invocable: false');
     }
+    if (skillName.startsWith('principle-') && frontmatter['disable-model-invocation'] !== 'true') {
+      errors.push('Principle skills must set disable-model-invocation: true');
+    }
   }
 
   const links = extractMarkdownLinks(content);

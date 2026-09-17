@@ -26,7 +26,7 @@ There is a small family of named stacks in this corner of the internet.
 
 [**gstack**](https://github.com/garrytan/gstack) is Garry Tan's Claude Code setup. A virtual team of specialists. Office hours, CEO review, QA in a real browser, ship.
 
-[**pstack**](https://github.com/cursor/plugins/tree/main/pstack) is Lauren Tan's (poteto) engineering stack. 23 engineering playbooks, 22 design principles, parallel agents, verify on the real artifact. I learned a lot from it.
+[**pstack**](https://github.com/cursor/plugins/tree/main/pstack) is Lauren Tan's (poteto) engineering stack. Playbooks, principles, parallel agents, verify on the real artifact. I learned a lot from it.
 
 **fstack** is mine. Same engineering bar, founder work as the default mode. The engineering engine is `/engineer-mode`. `/poteto-mode` remains as an alias so existing prompts keep working. The playbooks and principles started as her work, and they are credited. The founder loop, the support-to-fix bridge, the social and sales skills, the browsing engine, and the dual-engine router did not.
 
@@ -40,9 +40,9 @@ Two engines. One orchestrator (`/fstack`) that classifies the request instead of
 
 **Founder operations.** The work that happens between commits. Inbound leads that need an honest reply, not a demo-script. Support tickets that are sometimes bugs and sometimes the product being confusing. Posts that should sound like you, not like a growth agency. Competitive teardowns that do not get you banned by Cloudflare on paragraph two.
 
-**Engineering.** `/engineer-mode` is the default for anything non-trivial in code. It routes to 23 engineering playbooks and 22 design principles. Reproduce first. Name the data shape before the abstraction. Architect across a function boundary. Verify on the real artifact. Delete the narrating comments. The principles are model-only leaves (`user-invocable: false`). Some IDE slash pickers still list them. That is the picker, not a catalog mistake.
+**Engineering.** `/engineer-mode` is the default for anything non-trivial in code. It routes to 23 engineering playbooks and 24 design principles. Reproduce first. Name the data shape before the abstraction. Architect across a function boundary. Verify on the real artifact. Delete the narrating comments. The principles are model-only leaves (`user-invocable: false`). Some IDE slash pickers still list them. That is the picker, not a catalog mistake.
 
-73 skills total. 51 are user-facing.
+75 skills total. 51 are user-facing.
 
 The bridge skill is `/support-loop`. A customer paid and the workspace is still locked. The agent finds the webhook, writes a failing test, fixes the handler, checks what else that path touches, and drafts the reply you can actually send. Most stacks stop at "sounds like a billing bug."
 
@@ -166,7 +166,7 @@ These are the modes you type on purpose.
 |---|---|
 | [`/fstack`](skills/fstack/SKILL.md) | You have a request and want the stack to classify it. |
 | [`/founder-mode`](skills/founder-mode/SKILL.md) | Own the whole loop: product, code, copy, customer, speed. |
-| [`/engineer-mode`](skills/engineer-mode/SKILL.md) | Non-trivial engineering. 23 engineering playbooks, 22 design principles. |
+| [`/engineer-mode`](skills/engineer-mode/SKILL.md) | Non-trivial engineering. 23 engineering playbooks, 24 design principles. |
 | [`/poteto-mode`](skills/poteto-mode/SKILL.md) | Same as `/engineer-mode`. Compatibility alias. |
 | [`/setup-fstack`](skills/setup-fstack/SKILL.md) | Point roles at the models you actually have. |
 | [`/stfu`](skills/stfu/SKILL.md) | Quiet execution. No filler, no diff recitation. |

@@ -95,14 +95,15 @@ try {
   const catalog = loadCatalog();
   assert(catalog.totals.skills >= 70, `Found ${catalog.totals.skills} skills (expected at least 70)`);
   assert(catalog.totals.playbooks === 23, `engineer-mode has ${catalog.totals.playbooks} playbooks (expected 23)`);
-  assert(catalog.totals.principles === 22, `Found ${catalog.totals.principles} principles (expected 22)`);
+  assert(catalog.totals.principles === 24, `Found ${catalog.totals.principles} principles (expected 24)`);
 
   const requiredSkills = [
     'fstack', 'founder-mode', 'engineer-mode', 'poteto-mode', 'lead-reply', 'unslop-email', 'inbox-triage',
     'support-loop', 'founder-voice', 'social-post', 'social-reply',
     'changelog-to-post', 'geo-page', 'customer-lens', 'office-hours',
     'ceo-review', 'retro', 'browse', 'teardown', 'stfu', 'sudo',
-    'principle-clear-naming', 'architect', 'arena',
+    'principle-clear-naming', 'principle-attack-the-premise',
+    'principle-test-behavior-not-implementation', 'architect', 'arena',
     'swarm', 'interrogate', 'unslop', 'tdd', 'deslop', 'fix-ci', 'setup-fstack'
   ];
   for (const req of requiredSkills) {
@@ -113,6 +114,7 @@ try {
   const lazinessContent = fs.readFileSync(lazinessPath, 'utf8');
   assert(lazinessContent.includes("Occam's Razor"), 'principle-laziness-protocol incorporates Occam\'s Razor');
   assert(lazinessContent.includes('user-invocable: false'), 'principles are not user-invocable');
+  assert(lazinessContent.includes('disable-model-invocation: true'), 'principles disable model invocation');
 
   const alias = fs.readFileSync(path.join(SKILLS_DIR, 'poteto-mode', 'SKILL.md'), 'utf8');
   assert(alias.includes('engineer-mode'), 'poteto-mode alias points at engineer-mode');

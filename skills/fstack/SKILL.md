@@ -14,7 +14,7 @@ menu-description: master entry point for founder operations and engineering rigo
 
 `fstack` is a harness-agnostic system designed for founders and technical operators. It bridges two symmetric engines:
 1. **The Founder Operations Engine ([`/founder-mode`](../founder-mode/SKILL.md))**: High-agency leverage for sales, customer support, brand growth, product marketing, and speed-to-market.
-2. **The Engineering Engine ([`/engineer-mode`](../engineer-mode/SKILL.md))**: World-class engineering rigor with 23 playbooks, 22 design principles, multi-model panels, and zero slop.
+2. **The Engineering Engine ([`/engineer-mode`](../engineer-mode/SKILL.md))**: World-class engineering rigor with 23 playbooks, 24 design principles, multi-model panels, and zero slop.
 
 ---
 
@@ -31,7 +31,7 @@ graph TD
     Router -->|"Audience / Social / Brand"| Social["/social-post, /social-reply (X vs LinkedIn)"]
     Router -->|"Marketing / Launch / SEO"| Marketing["/changelog-to-post, /geo-page, /customer-lens"]
     Router -->|"Strategy / Sparring"| Strategy["/office-hours, /ceo-review, /teardown"]
-    Router -->|"Code / Architecture / Bug Fix"| Eng["/engineer-mode (23 playbooks + 22 principles)"]
+    Router -->|"Code / Architecture / Bug Fix"| Eng["/engineer-mode (23 playbooks + 24 principles)"]
     Router -->|"End-to-End Delivery"| FullLoop["Full Founder Loop: Strategy -> Build -> Announce"]
 ```
 

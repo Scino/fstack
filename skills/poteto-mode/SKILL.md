@@ -2,6 +2,9 @@
 name: poteto-mode
 description: Compatibility alias for /engineer-mode. Same playbooks and principles. Use for /poteto-mode or when a prompt still says poteto-mode.
 menu-description: alias for engineer-mode
+mode: true
+disable-model-invocation: true
+reminder: New task? Playbook match or rigor needed -> apply /engineer-mode. Casual turn or user opts out -> don't.
 ---
 
 # poteto-mode (alias)

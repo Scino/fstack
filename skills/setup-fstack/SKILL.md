@@ -1,6 +1,6 @@
 ---
 name: setup-fstack
-description: Configure which models fstack uses per role. Detects available models and writes a per-harness override sheet. Use for /setup-fstack, "configure fstack models", or changing model choices.
+description: Configure which models fstack uses per role and at what reasoning budget. Detects available models and writes a per-harness override sheet. Use for /setup-fstack, "configure fstack models", "fstack budget", or changing model choices.
 menu-description: configure fstack per-role model choices
 ---
 
@@ -24,11 +24,20 @@ Enumerate the model slugs you can pass to a subagent in this session. That is th
 
 ### 2. Load current state
 
-If the override file for this harness already exists, read it and treat its values as current. Otherwise start from `models.json` for this harness, falling back to `universal`.
+If the override file for this harness already exists, read it and treat its `# budget` line and its role values as current. Otherwise start from `models.json` for this harness, falling back to `universal`.
 
-### 3. Map and confirm
+### 3. Budget, map, and confirm
 
-Show every role with its current model. Mark any real slug not in the detected set as needing a choice. Ask whether to accept as-is or change specific roles. Prefer a structured question over free text.
+**(a) Ask for a budget.** Prefer a structured question over free text. Offer these four options with these exact labels, and name the current budget when the sheet records one.
+
+- `unlimited - keep max`
+- `large - xhigh reasoning`
+- `medium - high reasoning`
+- `small - medium reasoning`
+
+**(b) Apply it.** Build the working table from the loaded state. On a re-run keep any role you changed by family, list, or alias (`inherit-parent`, `auto`). `unlimited` leaves every effort as in that table. `large`, `medium`, and `small` set the effort token of every real slug, panel entries included, to `xhigh`, `high`, or `medium`. The effort token is the last token, or the one before a trailing `fast`, on the ladder `max` > `xhigh` > `high` > `medium` > `low`. If the result is not a detected slug, use the same family's detected slug with the highest effort at or below the target, else mark the role as needing a choice. `inherit-parent` and `auto` do not change. Do not invent vendor slugs. Rewrite effort tokens on whatever `models.json` or the existing override already has.
+
+**(c) Show the roles and confirm.** Show every role with its model. Mark any real slug not in the detected set as needing a choice. Ask whether to accept as-is or change specific roles. Prefer a structured question over free text.
 
 Panel roles (`how critics`, `arena runners`, `architect runners`, `interrogate reviewers`) are lists. One subagent runs per entry. `arena cross-judge pool` is also a list. Arena picks one value whose model family differs from the parent when possible. `swarm workers` is the default worker model unless a race assigns another model per arm.
 
@@ -38,7 +47,7 @@ Every real slug written must be in the detected set. `inherit-parent` and `auto`
 
 ### 5. Write the override
 
-Overwrite the whole file so re-runs stay idempotent.
+Overwrite the whole file so re-runs stay idempotent. Include a `# budget` line with the chosen label and its target effort.
 
 **Cursor** (`~/.cursor/rules/fstack-models.mdc`):
 
@@ -49,6 +58,7 @@ alwaysApply: true
 ---
 # fstack model configuration. One line per role. Delete a line to fall back to models.json.
 # inherit-parent or auto: the role runs on the parent chat model (omit Task `model`).
+# budget: unlimited (max)
 feature, refactoring: composer-2.5
 bug-fix: gpt-5.6-sol-high
 perf-issue: gpt-5.6-sol-high
@@ -69,7 +79,7 @@ architect runners: composer-2.5, gpt-5.6-sol-high, cursor-grok-4.6-high
 interrogate reviewers: composer-2.5, gpt-5.6-sol-high, cursor-grok-4.6-high
 ```
 
-**Claude Code / Codex** use the same role rows. Change only the slugs and the file path.
+**Claude Code / Codex** use the same role rows and the same `# budget` line. Change only the slugs and the file path.
 
 ### 6. Wire it in
 

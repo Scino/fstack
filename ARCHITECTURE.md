@@ -19,7 +19,7 @@ fstack/
 │   ├── founder-mode/
 │   ├── engineer-mode/      23 playbooks, agent defs, licenses
 │   ├── poteto-mode/        alias SKILL.md only
-│   └── principle-*/        22 model-only leaves (user-invocable: false)
+│   └── principle-*/        24 model-only leaves (user-invocable: false)
 ├── models.json             symbolic roles per harness
 ├── assets/logo.svg
 ├── .cursor-plugin/         Cursor plugin manifest

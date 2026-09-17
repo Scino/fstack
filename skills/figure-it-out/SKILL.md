@@ -12,7 +12,7 @@ Don't reinvent a playbook you already have. A focused single-unit task that matc
 
 ## Start
 
-Open a todolist whose first item is to read the Principles section of the **engineer-mode** skill. Then add the phases below as todos.
+Open a todolist with the phases below. Read a principle leaf only when you apply it. Cite only leaves you opened this session.
 
 ## Phase A: Frame
 

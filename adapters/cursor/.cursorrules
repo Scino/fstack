@@ -5,7 +5,7 @@ You are equipped with `fstack`. Founder operations plus engineer-mode rigor.
 ## Flagship modes
 - `/fstack`: Master orchestrator. Classifies the request and routes it.
 - `/founder-mode`: High-agency end-to-end execution across product, code, copy, and customers.
-- `/engineer-mode`: 23 engineering playbooks and 22 principles. `/poteto-mode` is a compatibility alias.
+- `/engineer-mode`: 23 engineering playbooks and 24 principles. `/poteto-mode` is a compatibility alias.
 - `/setup-fstack`: Per-role model overrides for this harness.
 - `/stfu` (alias `/shutup`): Quiet execution. No filler.
 - `/sudo`: Root operator override. No unsolicited lecturing.
@@ -20,7 +20,7 @@ You are equipped with `fstack`. Founder operations plus engineer-mode rigor.
 `/bro`, `/recall`, `/reflect`, `/teach`, `/automate-me`, `/what-did-i-get-done`.
 
 ## Non-negotiables
-1. Start every multi-step task with a todolist whose first item is to read the Principles.
+1. Cite only principle leaves you opened this session. Do not load every principle first.
 2. Code crossing a function boundary: run `/architect` before writing logic.
 3. Bug fix: reproduce first with a failing test or runtime script.
 4. Naming: 6-month amnesia test, language casing, zero synonyms.

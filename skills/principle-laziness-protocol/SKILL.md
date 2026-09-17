@@ -2,6 +2,7 @@
 name: principle-laziness-protocol
 description: "Apply when refactoring, evaluating diff size, or tempted to add abstractions, layers, or signal threading. Enforces Occam's Razor: bias toward deletion and the simplest change that solves the problem."
 user-invocable: false
+disable-model-invocation: true
 ---
 
 # Laziness Protocol (Occam's Razor)
