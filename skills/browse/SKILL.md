@@ -1,7 +1,7 @@
 ---
 name: browse
-description: Anti-bot web browsing and extraction. Attaches to your real Chrome over CDP when it is running, otherwise one-shot headless Chrome. Use for /browse, "open URL", competitor pages, interactive search UIs, or a logged-in session.
-menu-description: anti-bot browser automation and web extraction
+description: Web browsing and page extraction. Attaches to Chrome over CDP when it is running, otherwise one-shot headless Chrome. Use for /browse, "open URL", public competitor pages, interactive search UIs, or a session where you are already logged in.
+menu-description: browser automation and web extraction
 ---
 
 # Browse
@@ -44,7 +44,7 @@ fstack browse sanitize ./raw.txt
 
 `goto` / `text` / `screenshot` / `eval` without a URL need Chrome CDP (your session). With a URL they can run headless in one shot.
 
-`text` waits for visible body text, then fails if the body is still empty. That is usually a search shell, a bot wall, or JS that never painted. Do not retry the same URL. Search or click, then `text` again.
+`text` waits for visible body text, then fails if the body is still empty. That is usually a search shell, a challenge page, or JS that never painted. Do not retry the same URL. Search or click, then `text` again.
 
 ## Strategy 1: One-shot headless
 
@@ -54,7 +54,7 @@ Public pages where the URL already has the content. Pass the URL on the command.
 fstack browse text https://example.com
 ```
 
-Uses installed Chrome when possible, with webdriver masking and chrome.runtime spoofing. Text is injection-sanitized.
+Uses installed Chrome when possible. Text is injection-sanitized.
 
 ## Strategy 2: Real Chrome (interaction and login-walled sites)
 
@@ -62,7 +62,7 @@ Use CDP when you need to type, click, or wait on a page, or when headless is blo
 
 Empty extract is not a login problem by itself. Many public UIs start as a search shell. Attach CDP, complete the query or click in that window (or `goto` a URL that already encodes the query), wait until results exist, then `fstack browse text` with no URL.
 
-Login-walled sites (LinkedIn, X, and similar) still need you to log in by hand in that Chrome.
+Login-walled sites (LinkedIn, X, and similar) still need you to log in by hand in that Chrome. Only use sessions you own.
 
 Start Chrome once:
 

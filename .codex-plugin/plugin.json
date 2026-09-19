@@ -1,28 +1,30 @@
 {
   "name": "fstack",
   "version": "1.1.0",
-  "description": "Founder operations plus engineering rigor. Dual-engine agent stack. On Codex, tool names resolve via skills/engineer-mode/references/codex-tools.md.",
+  "description": "Founder's Stack for ChatGPT and Codex. Answer leads, close support loops, ship product without slop.",
   "author": {
     "name": "Fabio Parlascino",
     "url": "https://github.com/Scino"
   },
-  "homepage": "https://github.com/Scino/fstack",
+  "homepage": "https://onelence.com/open-source/fstack",
   "repository": "https://github.com/Scino/fstack",
   "license": "MIT",
   "keywords": [
     "fstack",
     "founder",
-    "engineer-mode",
+    "sales",
+    "support",
+    "engineering",
     "skills",
     "workflow"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "fstack",
-    "shortDescription": "Founder ops plus verified engineering. Talk to users, ship, don't ship slop.",
-    "longDescription": "fstack routes founder work (sales, support, social, strategy) and engineering work (engineer-mode playbooks and principles) through one skill tree. Skills are harness-agnostic. On Codex, Claude tool names resolve via the codex-tools mapping.",
+    "shortDescription": "Talk to users. Build the thing.",
+    "longDescription": "fstack is a dual-engine skill stack for founders who still write the product. One router classifies the request: founder operations (inbound leads, support, social, strategy, competitive teardown) or engineering (/engineer-mode with 23 playbooks and 24 principles). The bridge skill is /support-loop: diagnose the customer issue, fix the bug with a failing test, draft the reply you can send. Install once. Same skills in ChatGPT, Codex, Cursor, and Claude Code.",
     "developerName": "Fabio Parlascino",
-    "category": "Developer Tools",
+    "category": "Business & Operations",
     "capabilities": [
       "Interactive",
       "Read",
@@ -30,10 +32,13 @@
     ],
     "defaultPrompt": [
       "Work on this in engineer-mode.",
-      "Run /support-loop on this customer complaint."
+      "Run /support-loop on this customer complaint.",
+      "Reply to this inbound lead honestly."
     ],
-    "websiteURL": "https://github.com/Scino/fstack",
+    "websiteURL": "https://onelence.com/open-source/fstack",
+    "composerIcon": "./assets/logo.svg",
     "logo": "./assets/logo.svg",
-    "brandColor": "#C4542A"
+    "screenshots": ["./assets/fstack-cover.png"],
+    "brandColor": "#f45a22"
   }
 }
