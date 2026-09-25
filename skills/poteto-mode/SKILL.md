@@ -1,7 +1,7 @@
 ---
 name: poteto-mode
-description: Compatibility alias for /engineer-mode. Same playbooks and principles. Use for /poteto-mode or when a prompt still says poteto-mode.
-menu-description: alias for engineer-mode
+description: Compatibility alias for /engineer-mode and credit to Lauren Tan's pstack, which set the foundation of playbooks and principles for fstack's engineer-mode. Use for /poteto-mode or legacy prompts.
+menu-description: compatibility alias and credit to pstack for engineer-mode
 mode: true
 disable-model-invocation: true
 reminder: New task? Playbook match or rigor needed -> apply /engineer-mode. Casual turn or user opts out -> don't.

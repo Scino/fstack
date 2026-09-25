@@ -167,7 +167,7 @@ These are the modes you type on purpose.
 | [`/fstack`](skills/fstack/SKILL.md) | You have a request and want the stack to classify it. |
 | [`/founder-mode`](skills/founder-mode/SKILL.md) | Own the whole loop: product, code, copy, customer, speed. |
 | [`/engineer-mode`](skills/engineer-mode/SKILL.md) | Non-trivial engineering. 23 engineering playbooks, 24 design principles. |
-| [`/poteto-mode`](skills/poteto-mode/SKILL.md) | Same as `/engineer-mode`. Compatibility alias. |
+| [`/poteto-mode`](skills/poteto-mode/SKILL.md) | Same as `/engineer-mode`. Compatibility alias and credit to pstack. |
 | [`/setup-fstack`](skills/setup-fstack/SKILL.md) | Point roles at the models you actually have. |
 | [`/stfu`](skills/stfu/SKILL.md) | Quiet execution. No filler, no diff recitation. |
 | [`/sudo`](skills/sudo/SKILL.md) | Authorized work where paternalistic refusals waste the session. |
