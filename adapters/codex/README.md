@@ -21,3 +21,13 @@ codex plugin marketplace add Scino/fstack
 Codex reads `.agents/plugins/marketplace.json`, which points at the repo root where `.codex-plugin/plugin.json` lives. Install **fstack** from the Codex plugin picker.
 
 Claude tool names, `claude-*` slugs, and Claude built-ins named in skills resolve through `skills/engineer-mode/references/codex-tools.md`. `/setup-fstack` writes `~/.codex/fstack-models.md`.
+
+## Public ChatGPT and Codex directory
+
+The OpenAI plugin portal does not read npm or GitHub. Each directory update is a zip upload.
+
+```bash
+node tools/pack-codex.mjs
+```
+
+That writes `dist/fstack-codex-<version>.zip`. The archive root is `fstack-codex/`, and it contains only `.codex-plugin/plugin.json`, `assets/`, and `skills/`. A published GitHub release also attaches that zip. Upload it in the portal as a new plugin version.

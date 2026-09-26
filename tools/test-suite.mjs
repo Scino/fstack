@@ -12,6 +12,7 @@ import { sanitizePageText, STEALTH_SCRIPT, BROWSE_COMMANDS, formatEmptyPageError
 import { getHarnessDefinitions, installToTarget, pruneStaleSkills } from './installer.mjs';
 import { PACKAGE_ROOT, SKILLS_DIR, MODELS_PATH } from './package-root.mjs';
 import { loadCatalog } from './catalog.mjs';
+import { packCodexZip } from './pack-codex.mjs';
 
 let passed = 0;
 let failed = 0;
@@ -147,6 +148,12 @@ try {
   assert(cursorPlugin.logo === 'assets/logo.svg', 'Cursor plugin declares a logo');
   assert(cursorPlugin.author?.name === 'Fabio Parlascino', 'Cursor plugin author is Fabio Parlascino');
   assert(fs.existsSync(path.join(PACKAGE_ROOT, 'assets', 'logo.svg')), 'logo asset exists');
+  const packed = packCodexZip({ outDir: fs.mkdtempSync(path.join(os.tmpdir(), 'fstack-codex-')) });
+  const zip = fs.readFileSync(packed.outPath);
+  assert(zip.includes(Buffer.from('fstack-codex/.codex-plugin/plugin.json')), 'codex zip contains the plugin manifest');
+  assert(zip.includes(Buffer.from('fstack-codex/assets/logo.svg')), 'codex zip contains the logo');
+  assert(zip.includes(Buffer.from('fstack-codex/skills/fstack/SKILL.md')), 'codex zip contains skills');
+  assert(!zip.includes(Buffer.from('fstack-codex/bin/')), 'codex zip omits the CLI');
 } catch (err) {
   assert(false, `Package surface test crashed: ${err.message}`);
 }

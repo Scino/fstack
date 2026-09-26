@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   id-token: write
 
 jobs:
@@ -46,3 +46,11 @@ jobs:
         run: npm publish --access public
         env:
           NPM_CONFIG_PROVENANCE: 'false'
+
+      - name: Attach Codex plugin zip to the release
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          node tools/pack-codex.mjs
+          gh release upload "${GITHUB_REF_NAME}" dist/fstack-codex-*.zip --clobber
