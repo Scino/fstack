@@ -38,7 +38,6 @@
     "websiteURL": "https://onelence.com/open-source/fstack",
     "composerIcon": "./assets/logo.svg",
     "logo": "./assets/logo.svg",
-    "screenshots": ["./assets/fstack-cover.png"],
     "brandColor": "#f45a22"
   }
 }

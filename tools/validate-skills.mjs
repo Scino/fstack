@@ -113,6 +113,47 @@ function assertDocCounts(catalog) {
   return errors;
 }
 
+function assertPluginManifests() {
+  const errors = [];
+  const pkg = JSON.parse(fs.readFileSync(path.join(PACKAGE_ROOT, 'package.json'), 'utf8'));
+  const manifestPaths = [
+    '.cursor-plugin/plugin.json',
+    '.codex-plugin/plugin.json',
+    '.claude-plugin/plugin.json',
+    '.antigravity-plugin/plugin.json'
+  ];
+
+  for (const rel of manifestPaths) {
+    const full = path.join(PACKAGE_ROOT, rel);
+    if (!fs.existsSync(full)) {
+      errors.push(`Missing plugin manifest: ${rel}`);
+      continue;
+    }
+    const manifest = JSON.parse(fs.readFileSync(full, 'utf8'));
+    if (manifest.version !== pkg.version) {
+      errors.push(`${rel} version (${manifest.version}) does not match package.json (${pkg.version})`);
+    }
+    if (rel === '.antigravity-plugin/plugin.json') {
+      const allowedKeys = new Set([
+        'name', 'description', 'logo', 'suggestedPrompts', 'displayName',
+        'version', 'author', 'homepage', 'repository', 'disabled'
+      ]);
+      for (const key of Object.keys(manifest)) {
+        if (!allowedKeys.has(key)) {
+          errors.push(`${rel} has unsupported Antigravity top-level key "${key}"`);
+        }
+      }
+      if (manifest.logo && !fs.existsSync(path.join(PACKAGE_ROOT, manifest.logo))) {
+        errors.push(`${rel} logo "${manifest.logo}" does not exist`);
+      }
+      if (Array.isArray(manifest.suggestedPrompts) && manifest.suggestedPrompts.length > 3) {
+        errors.push(`${rel} suggestedPrompts must have at most 3 items`);
+      }
+    }
+  }
+  return errors;
+}
+
 export function validateAllSkills() {
   if (!fs.existsSync(SKILLS_DIR)) {
     console.error(`Skills directory not found at: ${SKILLS_DIR}`);
@@ -142,7 +183,7 @@ export function validateAllSkills() {
     }
   }
 
-  const docErrors = assertDocCounts(catalog);
+  const docErrors = [...assertDocCounts(catalog), ...assertPluginManifests()];
   if (docErrors.length > 0) {
     errorCount += docErrors.length;
     console.log('\n[FAIL] catalog drift');
