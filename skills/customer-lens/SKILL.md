@@ -31,6 +31,7 @@ Founders and engineers have "curse of knowledge": we know exactly how the app wo
 - Common fails: Abstract taglines like *"Redefining the frontier of intelligent workflows"* (tells the user nothing).
 
 ### 2. Time-to-Value (The Onboarding Funnel)
+- If funnel or customer-journey analytics are connected via MCP (e.g., OneLence `get_funnel`, `list_conversions`, or `list_signals`), inspect where real visitors actually drop off before auditing the UI.
 - How many steps/clicks between *"Sign up"* and the *"Aha! moment"*?
 - Does the app force unnecessary onboarding steps (e.g. asking for phone number, team size, or company URL before showing any value)?
 - Does the empty state explain what to do, or is it a barren white screen?

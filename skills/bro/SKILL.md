@@ -1,6 +1,6 @@
 ---
 name: bro
-description: Restate the last message in plain human language, with no jargon. Use for /bro or when asked to say it plainly.
+description: Restate the last message in plain human language, with no jargon.
 menu-description: restate the last message in plain human language, no jargon
 ---
 

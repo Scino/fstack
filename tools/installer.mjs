@@ -34,10 +34,12 @@ export function getHarnessDefinitions(customHome = HOME) {
     {
       id: 'antigravity',
       name: 'Antigravity',
-      mode: 'skills',
-      path: path.join(customHome, '.gemini', 'antigravity', 'skills'),
-      detectDir: path.join(customHome, '.gemini', 'antigravity'),
-      description: 'Google Antigravity agent skills'
+      mode: 'antigravity-plugin',
+      path: path.join(customHome, '.gemini', 'config', 'plugins', 'fstack'),
+      legacySkillsPath: path.join(customHome, '.gemini', 'config', 'skills'),
+      extraLegacySkillsPaths: [path.join(customHome, '.gemini', 'antigravity', 'skills')],
+      detectDir: path.join(customHome, '.gemini'),
+      description: 'Google Antigravity plugin (~/.gemini/config/plugins/fstack)'
     },
     {
       id: 'codex',
@@ -172,6 +174,73 @@ function installPlugin(targetDef, options = {}) {
   }
 }
 
+function installAntigravityPlugin(targetDef, options = {}) {
+  const { dryRun = false, useCopy = false } = options;
+  console.log(`\nInstalling to ${targetDef.name}:`);
+  console.log(`  Destination: ${targetDef.path}`);
+
+  if (dryRun) {
+    console.log('  [DRY-RUN] Would install fstack as an Antigravity plugin.');
+    return { success: true, dryRun: true };
+  }
+
+  try {
+    if (fs.existsSync(targetDef.path)) {
+      fs.rmSync(targetDef.path, { recursive: true, force: true });
+    }
+    fs.mkdirSync(targetDef.path, { recursive: true });
+
+    const pkg = JSON.parse(fs.readFileSync(path.join(PACKAGE_ROOT, 'package.json'), 'utf8'));
+    const pluginManifest = {
+      name: 'fstack',
+      displayName: 'fstack',
+      version: pkg.version || '1.1.2',
+      description: 'Founder operations plus engineering rigor. Dual-engine agent stack for people who talk to users and ship.',
+      logo: 'assets/logo.svg',
+      author: {
+        name: 'Fabio Parlascino',
+        url: 'https://github.com/Scino'
+      },
+      homepage: 'https://github.com/Scino/fstack',
+      repository: 'https://github.com/Scino/fstack',
+      suggestedPrompts: [
+        'Work on this in /engineer-mode.',
+        'Run /support-loop on this customer complaint.',
+        'Reply to this inbound lead honestly with /lead-reply.'
+      ]
+    };
+    fs.writeFileSync(path.join(targetDef.path, 'plugin.json'), `${JSON.stringify(pluginManifest, null, 2)}\n`, 'utf8');
+
+    const logoSrc = path.join(PACKAGE_ROOT, 'assets', 'logo.svg');
+    if (fs.existsSync(logoSrc)) {
+      const assetsDest = path.join(targetDef.path, 'assets');
+      fs.mkdirSync(assetsDest, { recursive: true });
+      fs.copyFileSync(logoSrc, path.join(assetsDest, 'logo.svg'));
+    }
+
+    const readmeSrc = path.join(PACKAGE_ROOT, 'README.md');
+    if (fs.existsSync(readmeSrc)) {
+      fs.copyFileSync(readmeSrc, path.join(targetDef.path, 'README.md'));
+    }
+
+    linkOrCopy(SKILLS_DIR, path.join(targetDef.path, 'skills'), useCopy);
+
+    const legacyPaths = [targetDef.legacySkillsPath, ...(targetDef.extraLegacySkillsPaths || [])].filter(Boolean);
+    for (const legacyPath of legacyPaths) {
+      const removed = removeLegacyCursorSkills(legacyPath);
+      if (removed > 0) {
+        console.log(`  Removed ${removed} legacy copies from ${legacyPath}`);
+      }
+    }
+
+    console.log(`  Installed fstack plugin into ${targetDef.name}.`);
+    return { success: true, count: 1 };
+  } catch (err) {
+    console.error(`  Failed to install into ${targetDef.name}: ${err.message}`);
+    return { success: false, error: err.message };
+  }
+}
+
 export function installToTarget(targetDef, options = {}) {
   if (isPackageLocalAgentsPath(targetDef.path)) {
     console.log('\nSkipping project .agents/skills inside the fstack repo (would duplicate skills/).');
@@ -180,6 +249,10 @@ export function installToTarget(targetDef, options = {}) {
 
   if (targetDef.mode === 'plugin') {
     return installPlugin(targetDef, options);
+  }
+
+  if (targetDef.mode === 'antigravity-plugin') {
+    return installAntigravityPlugin(targetDef, options);
   }
 
   const { dryRun = false, useCopy = false } = options;
@@ -213,6 +286,22 @@ export function installToTarget(targetDef, options = {}) {
     if (pruned > 0) {
       console.log(`  Removed ${pruned} leftover skills from a previous install.`);
     }
+
+    if (targetDef.legacySkillsPath && fs.existsSync(targetDef.legacySkillsPath)) {
+      let legacyRemoved = 0;
+      for (const skillName of skills) {
+        const dest = path.join(targetDef.legacySkillsPath, skillName);
+        if (fs.existsSync(dest) && isOwnedSkillLink(dest)) {
+          fs.rmSync(dest, { recursive: true, force: true });
+          legacyRemoved++;
+        }
+      }
+      legacyRemoved += pruneStaleSkills(targetDef.legacySkillsPath);
+      if (legacyRemoved > 0) {
+        console.log(`  Removed ${legacyRemoved} legacy copies from ${targetDef.legacySkillsPath}`);
+      }
+    }
+
     console.log(`  Installed ${installedCount} skills into ${targetDef.name}.`);
     return { success: true, count: installedCount };
   } catch (err) {

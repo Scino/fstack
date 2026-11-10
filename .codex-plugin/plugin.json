@@ -22,7 +22,7 @@
   "interface": {
     "displayName": "fstack",
     "shortDescription": "Talk to users. Build the thing.",
-    "longDescription": "fstack is a dual-engine skill stack for founders who still write the product. One router classifies the request: founder operations (inbound leads, support, social, strategy, competitive teardown) or engineering (/engineer-mode with 23 playbooks and 24 principles). The bridge skill is /support-loop: diagnose the customer issue, fix the bug with a failing test, draft the reply you can send. Install once. Same skills in ChatGPT, Codex, Cursor, and Claude Code.",
+    "longDescription": "fstack is a dual-engine skill stack for founders who still write the product. One router classifies the request: founder operations (inbound leads, support, social, strategy, competitive teardown) or engineering (/engineer-mode with 23 playbooks and 25 principles). The bridge skill is /support-loop: diagnose the customer issue, fix the bug with a failing test, draft the reply you can send. Install once. Same skills in ChatGPT, Codex, Cursor, and Claude Code.",
     "developerName": "Fabio Parlascino",
     "category": "Business & Operations",
     "capabilities": [

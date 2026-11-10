@@ -40,7 +40,7 @@ Commands:
 Targets:
   cursor         Cursor plugin (~/.cursor/plugins/local/fstack)
   claude         Claude Code (~/.claude/skills)
-  antigravity    Google Antigravity (~/.gemini/antigravity/skills)
+  antigravity    Google Antigravity plugin (~/.gemini/config/plugins/fstack)
   codex          OpenAI Codex (~/.codex/skills)
   opencode       OpenCode (~/.config/opencode/skills)
   agents         Project mode (.agents/skills)

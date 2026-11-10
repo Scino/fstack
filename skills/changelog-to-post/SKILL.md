@@ -57,7 +57,7 @@ When invoked, `changelog-to-post` generates 3 linked deliverables:
 ### ✨ New
 - **Parallel Test Execution**: Run test suites across multiple CPU cores with `--workers`. Large suites finish up to 5x faster.
 - **GitHub Actions Annotations**: Test failures now show inline on your GitHub PR diffs with file and line references.
-- **JUnit XML Export**: Export test results formatted for Datadog, CircleCI, and standard CI reporting dashboards.
+- **JUnit XML Export**: Export test results formatted for GitHub Actions and standard CI reporting dashboards.
 
 ### ⚡ Improvements
 - **Warm AST Caching**: Tests with unchanged dependencies skip re-parsing, saving ~400ms per run during local TDD loops.

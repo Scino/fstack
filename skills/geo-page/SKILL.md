@@ -19,6 +19,7 @@ AI search engines don't rank keyword repetition; **they extract structured, veri
 - Creating an *"Alternative to [Competitor]"* or *"[OurProduct] vs [Competitor]"* page.
 - Writing a technical *How It Works* or *Architecture Deep-Dive* page.
 - Creating an official integration guide or framework comparison.
+- **Ground in live visibility data when available:** If an AI-visibility or SEO opportunity MCP is connected (e.g., OneLence `get_ai_visibility` and `list_seo_opportunities`), check where AI search engines currently cite or miss your brand and pick the highest-leverage topic before drafting. After shipping the page, record the change (`record_change`) so downstream attribution tracks its impact.
 
 ---
 

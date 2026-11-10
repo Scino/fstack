@@ -24,6 +24,7 @@
     ".cursor-plugin",
     ".codex-plugin",
     ".claude-plugin",
+    ".antigravity-plugin",
     ".agents/plugins/marketplace.json"
   ],
   "type": "module",
@@ -36,6 +37,7 @@
   "scripts": {
     "validate": "node tools/validate-skills.mjs",
     "test": "node tools/test-suite.mjs",
+    "pack:codex": "node tools/pack-codex.mjs",
     "install:cursor": "node tools/installer.mjs --target cursor",
     "install:claude": "node tools/installer.mjs --target claude",
     "install:codex": "node tools/installer.mjs --target codex",

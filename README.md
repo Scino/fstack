@@ -40,9 +40,9 @@ Two engines. One orchestrator (`/fstack`) that classifies the request instead of
 
 **Founder operations.** The work that happens between commits. Inbound leads that need an honest reply, not a demo-script. Support tickets that are sometimes bugs and sometimes the product being confusing. Posts that should sound like you, not like a growth agency. Competitive teardowns that do not get you banned by Cloudflare on paragraph two.
 
-**Engineering.** `/engineer-mode` is the default for anything non-trivial in code. It routes to 23 engineering playbooks and 24 design principles. Reproduce first. Name the data shape before the abstraction. Architect across a function boundary. Verify on the real artifact. Delete the narrating comments. The principles are model-only leaves (`user-invocable: false`). Some IDE slash pickers still list them. That is the picker, not a catalog mistake.
+**Engineering.** `/engineer-mode` is the default for anything non-trivial in code. It routes to 23 engineering playbooks and 25 design principles. Reproduce first. Name the data shape before the abstraction. Architect across a function boundary. Verify on the real artifact. Delete the narrating comments. The principles are model-only leaves (`user-invocable: false`). Some IDE slash pickers still list them. That is the picker, not a catalog mistake.
 
-75 skills total. 51 are user-facing.
+84 skills total. 59 are user-facing.
 
 The bridge skill is `/support-loop`. A customer paid and the workspace is still locked. The agent finds the webhook, writes a failing test, fixes the handler, checks what else that path touches, and drafts the reply you can actually send. Most stacks stop at "sounds like a billing bug."
 
@@ -67,7 +67,7 @@ Windows: `./setup.ps1`. macOS/Linux: `./setup.sh`.
 
 `npx @scino/fstack install --all` detects which agents you have and links the skills into each one. `fstack doctor` prints what it found.
 
-Cursor, Claude Code, Codex, Antigravity, OpenCode, and project-local `.agents/skills` are first-class. Cursor also gets a plugin install (logo and author) instead of a pile of anonymous skill folders. The others use their normal skills directory. Details are in the table below.
+Cursor, Claude Code, Codex, Antigravity, OpenCode, and project-local `.agents/skills` are first-class. Cursor and Antigravity also get a plugin install (logo and author) instead of a pile of anonymous skill folders. The others use their normal skills directory. Details are in the table below.
 
 For a different project, not this repo:
 
@@ -166,7 +166,7 @@ These are the modes you type on purpose.
 |---|---|
 | [`/fstack`](skills/fstack/SKILL.md) | You have a request and want the stack to classify it. |
 | [`/founder-mode`](skills/founder-mode/SKILL.md) | Own the whole loop: product, code, copy, customer, speed. |
-| [`/engineer-mode`](skills/engineer-mode/SKILL.md) | Non-trivial engineering. 23 engineering playbooks, 24 design principles. |
+| [`/engineer-mode`](skills/engineer-mode/SKILL.md) | Non-trivial engineering. 23 engineering playbooks, 25 design principles. |
 | [`/poteto-mode`](skills/poteto-mode/SKILL.md) | Same as `/engineer-mode`. Compatibility alias and credit to pstack. |
 | [`/setup-fstack`](skills/setup-fstack/SKILL.md) | Point roles at the models you actually have. |
 | [`/stfu`](skills/stfu/SKILL.md) | Quiet execution. No filler, no diff recitation. |
@@ -221,6 +221,11 @@ The build verbs. Most of these are what `/engineer-mode` already routes to. You 
 | [`/babysit`](skills/babysit/SKILL.md) | Watch a PR to green. Skeptical of review bots. |
 | [`/create-verification-skill`](skills/create-verification-skill/SKILL.md) | Generate a project-local verify skill that drives the real app. |
 | [`/maintain-verification-skill`](skills/maintain-verification-skill/SKILL.md) | Keep that verify skill true as the app changes. |
+| [`/create-formal-verification-skill`](skills/create-formal-verification-skill/SKILL.md) | Generate a project-local formal verification skill and statechart map (`formal-verify-<app>`). |
+| [`/maintain-formal-verification-skill`](skills/maintain-formal-verification-skill/SKILL.md) | Keep formal verification statecharts and code in sync as the app changes. |
+| [`/statechart`](skills/statechart/SKILL.md) | Model state machines, verify invariants with TLC, and compile executable charts. |
+| [`/benchmark-checklist`](skills/benchmark-checklist/SKILL.md) | Pre-flight and post-flight checklist before reporting or acting on a benchmark number. |
+| [`/sharpen`](skills/sharpen/SKILL.md) | Cut redundancy and tighten agent-facing instructions (`SKILL.md`, `AGENTS.md`, rules) without losing constraints. |
 | [`/get-pr-comments`](skills/get-pr-comments/SKILL.md) | Pull review comments into the working set. |
 | [`/thermo-nuclear-code-quality-review`](skills/thermo-nuclear-code-quality-review/SKILL.md) | Unkind review. Use when you asked for it. |
 
@@ -231,13 +236,16 @@ Small tools that do not belong in either engine's headline, and still earn their
 | Skill | When to use it |
 |---|---|
 | [`/bro`](skills/bro/SKILL.md) | Restate the last message like a human talking to a human. |
+| [`/in-your-own-words`](skills/in-your-own-words/SKILL.md) | Explain the code or plan back in plain language without parroting identifiers. |
+| [`/correct`](skills/correct/SKILL.md) | Persist a user correction to the right durable home (memory, rule, or skill). |
+| [`/ketchup`](skills/ketchup/SKILL.md) | Catch up on work since a starting point and suggest next steps. |
 | [`/recall`](skills/recall/SKILL.md) | Catch up on recent work from chats and the shared record. |
 | [`/reflect`](skills/reflect/SKILL.md) | Post-task judgment. What actually happened. |
 | [`/teach`](skills/teach/SKILL.md) | Compose `/how` and `/why` into an explanation someone can follow. |
 | [`/automate-me`](skills/automate-me/SKILL.md) | Turn a repeated habit into a durable skill. |
 | [`/what-did-i-get-done`](skills/what-did-i-get-done/SKILL.md) | What shipped, in language you could send to a team. |
 
-22 `principle-*` skills sit beside these. `/engineer-mode` reads them. You should not have to.
+25 `principle-*` skills sit beside these. `/engineer-mode` reads them. You should not have to.
 
 ---
 
@@ -247,7 +255,7 @@ Small tools that do not belong in either engine's headline, and still earn their
 |---|---|
 | **Cursor** | Plugin at `~/.cursor/plugins/local/fstack` |
 | **Claude Code** | `~/.claude/skills` |
-| **Antigravity** | `~/.gemini/antigravity/skills` |
+| **Antigravity** | Plugin at `~/.gemini/config/plugins/fstack` |
 | **OpenAI Codex** | `~/.codex/skills` via CLI, or `codex plugin marketplace add Scino/fstack` for the full plugin |
 | **OpenCode** | `~/.config/opencode/skills` |
 | **Hermes / OpenClaw** | `.agents/skills` via `fstack init` in the target project |

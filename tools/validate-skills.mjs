@@ -53,6 +53,9 @@ function validateSkill(skillName, skillDir) {
     if (skillName.startsWith('principle-') && frontmatter['disable-model-invocation'] !== 'true') {
       errors.push('Principle skills must set disable-model-invocation: true');
     }
+    if (!skillName.startsWith('principle-') && skillName !== 'poteto-mode' && frontmatter['disable-model-invocation'] === 'true') {
+      errors.push('User-facing skills (except poteto-mode alias) must not set disable-model-invocation: true');
+    }
   }
 
   const links = extractMarkdownLinks(content);

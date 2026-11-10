@@ -19,12 +19,13 @@ fstack/
 │   ├── founder-mode/
 │   ├── engineer-mode/      23 playbooks, agent defs, licenses
 │   ├── poteto-mode/        alias SKILL.md only
-│   └── principle-*/        24 model-only leaves (user-invocable: false)
+│   └── principle-*/        25 model-only leaves (user-invocable: false)
 ├── models.json             symbolic roles per harness
 ├── assets/logo.svg
 ├── .cursor-plugin/         Cursor plugin manifest
 ├── .codex-plugin/          Codex plugin manifest
 ├── .claude-plugin/         Claude Code plugin manifest
+├── .antigravity-plugin/    Antigravity plugin manifest
 ├── adapters/               .cursorrules template, Hermes notes
 ├── LICENSE
 ├── README.md

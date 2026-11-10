@@ -30,9 +30,10 @@ It is easy for a founder to feel exhausted on Friday without having moved the bu
 - **The Honest Ratio**: If customer-facing capabilities were < 40% of the week's output, diagnose why.
 
 ### 2. User Reality: What Did Customers Actually Do?
+- If a growth, attribution, or billing MCP is connected (e.g., OneLence `get_briefing` / `get_performance` / `list_decisions`, PostHog, or Stripe), pull real funnel conversions, channel ROI, wasted-spend signals, and revenue movement first rather than relying on gut feel.
 - What was the qualitative feedback from users/prospects this week?
 - Where did users get stuck or complain?
-- Did any metric move (signups, active runs, revenue, retention)?
+- Did any metric move (signups, active runs, conversion rate, revenue, retention)?
 
 ### 3. Debt & Slop Audit: What Corners Did We Cut?
 - Check for temporary hacks, missing tests, or unhandled edge cases introduced during fast shipping.

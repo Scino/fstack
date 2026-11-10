@@ -87,6 +87,9 @@ try {
   const cursor = harnesses.find((h) => h.id === 'cursor');
   assert(cursor.mode === 'plugin', 'Cursor installs as a plugin, not loose skills');
   assert(cursor.path.includes(path.join('.cursor', 'plugins', 'local', 'fstack')), 'Cursor plugin path is ~/.cursor/plugins/local/fstack');
+  const antigravity = harnesses.find((h) => h.id === 'antigravity');
+  assert(antigravity.mode === 'antigravity-plugin', 'Antigravity installs as a plugin so Windows directory scan loads all skills');
+  assert(antigravity.path.includes(path.join('.gemini', 'config', 'plugins', 'fstack')), 'Antigravity plugin path is ~/.gemini/config/plugins/fstack');
 } catch (err) {
   assert(false, `Installer test crashed: ${err.message}`);
 }
@@ -94,9 +97,9 @@ try {
 console.log('\n[Test Suite 4: Core Skills & Playbooks]');
 try {
   const catalog = loadCatalog();
-  assert(catalog.totals.skills >= 70, `Found ${catalog.totals.skills} skills (expected at least 70)`);
+  assert(catalog.totals.skills >= 80, `Found ${catalog.totals.skills} skills (expected at least 80)`);
   assert(catalog.totals.playbooks === 23, `engineer-mode has ${catalog.totals.playbooks} playbooks (expected 23)`);
-  assert(catalog.totals.principles === 24, `Found ${catalog.totals.principles} principles (expected 24)`);
+  assert(catalog.totals.principles === 25, `Found ${catalog.totals.principles} principles (expected 25)`);
 
   const requiredSkills = [
     'fstack', 'founder-mode', 'engineer-mode', 'poteto-mode', 'lead-reply', 'unslop-email', 'inbox-triage',
@@ -104,8 +107,10 @@ try {
     'changelog-to-post', 'geo-page', 'customer-lens', 'office-hours',
     'ceo-review', 'retro', 'browse', 'teardown', 'stfu', 'sudo',
     'principle-clear-naming', 'principle-attack-the-premise',
-    'principle-test-behavior-not-implementation', 'architect', 'arena',
-    'swarm', 'interrogate', 'unslop', 'tdd', 'deslop', 'fix-ci', 'setup-fstack'
+    'principle-test-behavior-not-implementation', 'principle-explain-the-number',
+    'architect', 'arena', 'swarm', 'interrogate', 'unslop', 'tdd', 'deslop', 'fix-ci', 'setup-fstack',
+    'sharpen', 'in-your-own-words', 'correct', 'benchmark-checklist', 'ketchup',
+    'create-formal-verification-skill', 'maintain-formal-verification-skill', 'statechart'
   ];
   for (const req of requiredSkills) {
     assert(catalog.names.includes(req), `Skill "${req}" exists in skills/`);
@@ -143,6 +148,7 @@ try {
   assert(marketplace.plugins?.[0]?.name === 'fstack', 'Codex marketplace lists fstack');
   assert(marketplace.plugins?.[0]?.source?.path === './', 'Codex marketplace points at repo root');
   assert(fs.existsSync(path.join(PACKAGE_ROOT, '.claude-plugin', 'plugin.json')), 'Claude plugin manifest at repo root');
+  assert(fs.existsSync(path.join(PACKAGE_ROOT, '.antigravity-plugin', 'plugin.json')), 'Antigravity plugin manifest at repo root');
   assert(pkg.repository.url.includes('github.com/Scino/fstack'), 'repository URL is Scino/fstack');
   const cursorPlugin = JSON.parse(fs.readFileSync(path.join(PACKAGE_ROOT, '.cursor-plugin', 'plugin.json'), 'utf8'));
   assert(cursorPlugin.logo === 'assets/logo.svg', 'Cursor plugin declares a logo');
