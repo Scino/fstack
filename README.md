@@ -69,6 +69,21 @@ Windows: `./setup.ps1`. macOS/Linux: `./setup.sh`.
 
 Cursor, Claude Code, Codex, Antigravity, OpenCode, and project-local `.agents/skills` are first-class. Cursor and Antigravity also get a plugin install (logo and author) instead of a pile of anonymous skill folders. The others use their normal skills directory. Details are in the table below.
 
+Claude Code only, without the CLI:
+
+```bash
+npx @scino/fstack install --target claude
+```
+
+That links every skill into `~/.claude/skills`, so `/fstack`, `/engineer-mode` and the rest show up in the slash menu. Start a new Claude Code session afterwards. If the commands still do not show up, check `~/.claude/skills/engineer-mode/SKILL.md` exists. Or install it as a plugin from inside Claude Code:
+
+```
+/plugin marketplace add Scino/fstack
+/plugin install fstack@fstack
+```
+
+Plugin skills are namespaced, e.g. `/fstack:engineer-mode`. Use one route, not both, or every command shows up twice.
+
 For a different project, not this repo:
 
 ```bash
@@ -254,7 +269,7 @@ Small tools that do not belong in either engine's headline, and still earn their
 | Harness | Where it lands |
 |---|---|
 | **Cursor** | Plugin at `~/.cursor/plugins/local/fstack` |
-| **Claude Code** | `~/.claude/skills` |
+| **Claude Code** | `~/.claude/skills` via CLI, or `/plugin marketplace add Scino/fstack` then `/plugin install fstack@fstack` for the full plugin (adds the `engineer-agent` subagent; commands are namespaced `/fstack:engineer-mode`). Pick one, not both |
 | **Antigravity** | Plugin at `~/.gemini/config/plugins/fstack` |
 | **OpenAI Codex** | `~/.codex/skills` via CLI, or `codex plugin marketplace add Scino/fstack` for the full plugin |
 | **OpenCode** | `~/.config/opencode/skills` |

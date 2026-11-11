@@ -8,7 +8,9 @@ After clone:
 node bin/fstack.js install --target cursor
 ```
 
-That links the repo as a Cursor plugin (`~/.cursor/plugins/local/fstack`). Do not run `init` inside this repo. `.agents/skills` here would duplicate the plugin in the slash picker.
+For Claude Code, also run `node bin/fstack.js install --target claude` (links `~/.claude/skills`). `--all` covers both.
+
+The Cursor install links the repo as a Cursor plugin (`~/.cursor/plugins/local/fstack`). Do not run `init` inside this repo. `.agents/skills` here would duplicate the plugin in the slash picker.
 
 For other projects:
 

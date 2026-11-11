@@ -39,6 +39,9 @@ function validateSkill(skillName, skillDir) {
   if (!frontmatter) {
     errors.push('Missing or invalid YAML frontmatter (must start with ---)');
   } else {
+    for (const issue of findTruncatingYamlComments(content)) {
+      errors.push(issue);
+    }
     if (!frontmatter.name) {
       errors.push('Frontmatter missing required "name" field');
     } else if (frontmatter.name !== skillName) {
@@ -111,6 +114,24 @@ function assertDocCounts(catalog) {
     }
   }
   return errors;
+}
+
+// In YAML, " #" inside an unquoted value starts a comment, so Claude Code and
+// other strict parsers silently cut the value there (e.g. "The #1 strategy").
+function findTruncatingYamlComments(content) {
+  const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (!match) return [];
+  const issues = [];
+  for (const line of match[1].split(/\r?\n/)) {
+    const kv = line.match(/^([A-Za-z0-9_-]+):\s+(.*)$/);
+    if (!kv) continue;
+    const value = kv[2];
+    if (/^["'|>]/.test(value)) continue;
+    if (/\s#/.test(value)) {
+      issues.push(`Frontmatter "${kv[1]}" has an unquoted " #", which YAML parsers treat as a comment and truncate. Quote the value or drop the #.`);
+    }
+  }
+  return issues;
 }
 
 function assertPluginManifests() {

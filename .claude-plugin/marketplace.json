@@ -1,0 +1,16 @@
+{
+  "name": "fstack",
+  "owner": {
+    "name": "Fabio Parlascino"
+  },
+  "metadata": {
+    "description": "fstack, Founder's Stack: founder operations plus engineering rigor."
+  },
+  "plugins": [
+    {
+      "name": "fstack",
+      "source": "./",
+      "description": "Founder operations plus engineering rigor. Dual-engine agent stack for people who talk to users and ship."
+    }
+  ]
+}

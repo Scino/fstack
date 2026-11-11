@@ -1,6 +1,6 @@
 ---
 name: social-reply
-description: Crafts high-leverage, non-slop replies to trending and viral posts on X and LinkedIn. The #1 growth strategy for founders and early accounts to build presence and earn authentic followers without being spammy. Use for /social-reply, "draft reply to tweet", or commenting on posts.
+description: Crafts high-leverage, non-slop replies to trending and viral posts on X and LinkedIn. The number one growth strategy for founders and early accounts to build presence and earn authentic followers without being spammy. Use for /social-reply, "draft reply to tweet", or commenting on posts.
 menu-description: craft high-leverage, insightful replies to trending posts on X/LinkedIn
 ---
 

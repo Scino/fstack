@@ -148,6 +148,13 @@ try {
   assert(marketplace.plugins?.[0]?.name === 'fstack', 'Codex marketplace lists fstack');
   assert(marketplace.plugins?.[0]?.source?.path === './', 'Codex marketplace points at repo root');
   assert(fs.existsSync(path.join(PACKAGE_ROOT, '.claude-plugin', 'plugin.json')), 'Claude plugin manifest at repo root');
+  const claudeMarketplace = JSON.parse(fs.readFileSync(path.join(PACKAGE_ROOT, '.claude-plugin', 'marketplace.json'), 'utf8'));
+  assert(claudeMarketplace.plugins?.[0]?.name === 'fstack', 'Claude Code marketplace lists fstack');
+  assert(claudeMarketplace.plugins?.[0]?.source === './', 'Claude Code marketplace points at repo root');
+  const claudePlugin = JSON.parse(fs.readFileSync(path.join(PACKAGE_ROOT, '.claude-plugin', 'plugin.json'), 'utf8'));
+  for (const agentPath of claudePlugin.agents || []) {
+    assert(fs.existsSync(path.join(PACKAGE_ROOT, agentPath)), `Claude plugin agent exists: ${agentPath}`);
+  }
   assert(fs.existsSync(path.join(PACKAGE_ROOT, '.antigravity-plugin', 'plugin.json')), 'Antigravity plugin manifest at repo root');
   assert(pkg.repository.url.includes('github.com/Scino/fstack'), 'repository URL is Scino/fstack');
   const cursorPlugin = JSON.parse(fs.readFileSync(path.join(PACKAGE_ROOT, '.cursor-plugin', 'plugin.json'), 'utf8'));

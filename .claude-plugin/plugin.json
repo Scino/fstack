@@ -12,5 +12,9 @@
     "fstack",
     "founder",
     "engineer-mode"
+  ],
+  "agents": [
+    "./skills/engineer-mode/references/agents/engineer-agent.md",
+    "./skills/engineer-mode/references/agents/comment-sicko.md"
   ]
 }
