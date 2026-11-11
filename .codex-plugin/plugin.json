@@ -1,7 +1,7 @@
 {
   "name": "fstack",
-  "version": "1.1.3",
-  "description": "Founder's Stack for ChatGPT and Codex. Answer leads, close support loops, ship product without slop.",
+  "version": "1.1.4",
+  "description": "Founder's Stack. Answer leads, close support loops, and ship product without slop.",
   "author": {
     "name": "Fabio Parlascino",
     "url": "https://github.com/Scino"
@@ -21,8 +21,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "fstack",
-    "shortDescription": "Talk to users. Build the thing.",
-    "longDescription": "fstack is a dual-engine skill stack for founders who still write the product. One router classifies the request: founder operations (inbound leads, support, social, strategy, competitive teardown) or engineering (/engineer-mode with 23 playbooks and 25 principles). The bridge skill is /support-loop: diagnose the customer issue, fix the bug with a failing test, draft the reply you can send. Install once. Same skills in ChatGPT, Codex, Cursor, and Claude Code.",
+    "shortDescription": "Talk to users. Build the thing",
+    "longDescription": "fstack is a dual-engine skill stack for founders who still write the product. One router classifies the request: founder operations (inbound leads, support, social, strategy, competitive teardown) or engineering (/engineer-mode with 23 playbooks and 25 principles). The bridge skill is /support-loop: diagnose the customer issue, fix the bug with a failing test, and draft the reply you can send.",
     "developerName": "Fabio Parlascino",
     "category": "Business & Operations",
     "capabilities": [
@@ -36,6 +36,9 @@
       "Reply to this inbound lead honestly."
     ],
     "websiteURL": "https://onelence.com/open-source/fstack",
+    "supportURL": "https://onelence.com/contact",
+    "privacyPolicyURL": "https://onelence.com/privacy-policy",
+    "termsOfServiceURL": "https://onelence.com/terms-of-service",
     "composerIcon": "./assets/logo.svg",
     "logo": "./assets/logo.svg",
     "brandColor": "#f45a22"

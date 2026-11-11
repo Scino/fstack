@@ -133,6 +133,21 @@ function assertPluginManifests() {
     if (manifest.version !== pkg.version) {
       errors.push(`${rel} version (${manifest.version}) does not match package.json (${pkg.version})`);
     }
+    if (rel === '.codex-plugin/plugin.json') {
+      const iface = manifest.interface || {};
+      if (!iface.shortDescription || iface.shortDescription.length > 30) {
+        errors.push(`${rel} interface.shortDescription must be 30 characters or fewer (got ${iface.shortDescription?.length || 0})`);
+      }
+      for (const reqUrl of ['websiteURL', 'supportURL', 'privacyPolicyURL', 'termsOfServiceURL']) {
+        if (!iface[reqUrl] || !iface[reqUrl].startsWith('https://')) {
+          errors.push(`${rel} interface.${reqUrl} is required and must be https://`);
+        }
+      }
+      const combinedDesc = `${manifest.description || ''} ${iface.shortDescription || ''} ${iface.longDescription || ''}`;
+      if (/\b(Cursor|Claude|Gemini|Antigravity|Anthropic)\b/i.test(combinedDesc)) {
+        errors.push(`${rel} descriptions must not reference other AI assistants or platforms`);
+      }
+    }
     if (rel === '.antigravity-plugin/plugin.json') {
       const allowedKeys = new Set([
         'name', 'description', 'logo', 'suggestedPrompts', 'displayName',
