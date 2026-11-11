@@ -194,7 +194,7 @@ function installAntigravityPlugin(targetDef, options = {}) {
     const pluginManifest = {
       name: 'fstack',
       displayName: 'fstack',
-      version: pkg.version || '1.1.4',
+      version: pkg.version || '1.1.6',
       description: 'Founder operations plus engineering rigor. Dual-engine agent stack for people who talk to users and ship.',
       logo: 'assets/logo.svg',
       author: {
